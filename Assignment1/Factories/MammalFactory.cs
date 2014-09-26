@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-// Daniel Bäckström, 2014-09-08, Assignment 1
-namespace Assignment1
+// Daniel Bäckström, 2014-09-25, Assignment 2
+namespace Assignment2
 {
     /// <summary>
     /// A factory for objects inheriting mammal.
@@ -16,7 +16,7 @@ namespace Assignment1
         /// </summary>
         /// <param name="mammalType">The type of the mammal.</param>
         /// <returns>The new instance.</returns>
-        internal static Animal CreateMammal(MammalType mammalType)
+        internal static Mammal CreateMammal(MammalType mammalType)
         {
             switch (mammalType)
             {

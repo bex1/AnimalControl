@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// Daniel Bäckström, 2014-09-08, Assignment 1
-namespace Assignment1
+// Daniel Bäckström, 2014-09-25, Assignment 2
+namespace Assignment2
 {
     /// <summary>
     /// A reptile class.
@@ -15,9 +15,13 @@ namespace Assignment1
         private uint nbrEggsLaid;
 
         /// <summary>
-        /// Initializes a reptile with default values.
+        /// Initializes a reptile with specified values.
+        /// The rest of the fields are default set and should be set manually before use.
         /// </summary>
-        internal Reptile()
+        /// <param name="gender">The gender of the reptile. <see cref="GenderType"/></param>
+        /// <param name="eaterType">The type of eater the reptile is. <see cref="EaterType"/></param>
+        /// <param name="foodSchedule">The food schedule of the reptile.  <see cref="FoodSchedule"/></param>
+        internal Reptile(EaterType eaterType, FoodSchedule foodSchedule) : base(eaterType, foodSchedule)
         {
         }
 
@@ -27,11 +31,19 @@ namespace Assignment1
         /// <param name="id">The ID of the reptile.</param>
         /// <param name="name">The name of the reptile.</param>
         /// <param name="age">The age of the reptile.</param>
-        /// <param name="gender">The gender of the reptile.</param>
+        /// <param name="gender">The gender of the reptile. <see cref="GenderType"/></param>
+        /// <param name="eaterType">The type of eater the reptile is. <see cref="EaterType"/></param>
+        /// <param name="foodSchedule">The food schedule of the reptile.  <see cref="FoodSchedule"/></param>
         /// <param name="nbrEggsLaid">The number of eggs laid by the reptile.</param>
-        internal Reptile(string id, string name, uint age, GenderType gender, uint nbrEggsLaid) : base(id, name, age, gender)
+        internal Reptile(string id, string name, uint age, GenderType gender, EaterType eaterType, FoodSchedule foodSchedule, uint nbrEggsLaid) 
+            : base(id, name, age, gender, eaterType, foodSchedule)
         {
             this.nbrEggsLaid = nbrEggsLaid;   
+        }
+
+        internal Reptile(Reptile reptile) : base(reptile)
+        {
+            this.nbrEggsLaid = reptile.nbrEggsLaid; 
         }
 
         /// <summary>

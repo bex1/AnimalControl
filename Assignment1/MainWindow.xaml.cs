@@ -13,27 +13,30 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
+using System.Windows.Media.Animation;
 
-// Daniel Bäckström, 2014-09-08, Assignment 1
-namespace Assignment1
+// Daniel Bäckström, 2014-09-25, Assignment 2
+namespace Assignment2
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+
         private static readonly string mammalContent = "Number of teeth:";
         private static readonly string reptileContent = "Number eggs laid:";
         private static readonly string gooseContent = "Number of horns:";
         private static readonly string zebraContent = "Number of stripes:";
         private static readonly string lizardContent = "Can loose tail(y/n):";
         private static readonly string snakeContent = "Is poisonous(y/n):";
-        
+
         private AnimalManager animalManager;
 
 
         // ***** Initialization section *****
-        
+
         /// <summary>
         /// Initializes the mainwindow.
         /// </summary>
@@ -87,19 +90,19 @@ namespace Assignment1
             }
             catch (InvalidInputException ex)
             {
-                MessageBox.Show(ex.Message, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
+                HandleInvalidInputFrom(ex.getElement(), ex.Message);
             }
             UpdateAnimalView();
         }
-        
+
         /// <summary>
         /// Reads and validates the input into the animal and if all input is validated returns the factorycreated animal.
         /// </summary>
         /// <returns>The animal created.</returns>
         /// <exception cref="InvalidInputException">Thrown if any input validation fails.</exception>
-        private Animal ReadAndValidateInput()
+        private IAnimal ReadAndValidateInput()
         {
-            Animal animal = null;
+            IAnimal animal = null;
 
             CategoryType category = GetSelectedCategory();
 
@@ -163,7 +166,7 @@ namespace Assignment1
             {
                 if (lboxAnimal.SelectedItem == null)
                 {
-                    throw new InvalidInputException("Select an animal!");
+                    throw new InvalidInputException("Select an animal!", lboxAnimal);
                 }
                 if (lboxAnimal.SelectedItem is MammalType)
                 {
@@ -178,7 +181,7 @@ namespace Assignment1
             {
                 if (lboxCategory.SelectedItem == null)
                 {
-                    throw new InvalidInputException("Select a category!");
+                    throw new InvalidInputException("Select a category!", lboxCategory);
                 }
                 return (CategoryType)lboxCategory.SelectedItem;
             }
@@ -193,7 +196,7 @@ namespace Assignment1
         {
             if (lboxAnimal.SelectedItem == null)
             {
-                throw new InvalidInputException("Select an animal!");
+                throw new InvalidInputException("Select an animal!", lboxAnimal);
             }
             return (ReptileType)lboxAnimal.SelectedItem;
         }
@@ -207,7 +210,7 @@ namespace Assignment1
         {
             if (lboxAnimal.SelectedItem == null)
             {
-                throw new InvalidInputException("Select an animal!");
+                throw new InvalidInputException("Select an animal!", lboxAnimal);
             }
             return (MammalType)lboxAnimal.SelectedItem;
         }
@@ -221,7 +224,7 @@ namespace Assignment1
         {
             if (lboxGender.SelectedItem == null)
             {
-                throw new InvalidInputException("Select a gender!");
+                throw new InvalidInputException("Select a gender!", lboxGender);
             }
             return (GenderType)lboxGender.SelectedItem;
         }
@@ -237,7 +240,7 @@ namespace Assignment1
 
             if (String.IsNullOrWhiteSpace(name)) // Do not allow whitespace names
             {
-                throw new InvalidInputException("Name is not valid!");
+                throw new InvalidInputException("Name is not valid!", txtName);
             }
 
             return name;
@@ -258,7 +261,7 @@ namespace Assignment1
 
             if (!success)
             {
-                throw new InvalidInputException(failMessage);
+                throw new InvalidInputException(failMessage, txtBox);
             }
 
             return value;
@@ -285,7 +288,7 @@ namespace Assignment1
             }
             else
             {
-                throw new InvalidInputException(failMessage);
+                throw new InvalidInputException(failMessage, txtBox);
             }
         }
 
@@ -318,15 +321,15 @@ namespace Assignment1
         /// If all animals are listed the section is updated in regards of the selected animal,
         /// if not it is updated based on selected category and selected animal.
         /// </summary>
-        private void UpdateSpecficationsSection()
+        private void UpdateAnimalSpecificContent()
         {
             if (!cbxListAll.IsChecked.Value)
             {
-                UpdateSpecificationsSectionOnSelectedCategoryAndAnimal();
+                UpdateAnimalSpecificContentOnSelectedCategoryAndAnimal();
             }
             else
             {
-                UpdateSpecificationsSectionOnSelectedAnimal();
+                UpdateAnimalSpecificOnSelectedAnimal();
             }
         }
 
@@ -334,7 +337,7 @@ namespace Assignment1
         /// Updates the content of the labels in the specifications section with regards to 
         /// the selected category and animal.
         /// </summary>
-        private void UpdateSpecificationsSectionOnSelectedCategoryAndAnimal()
+        private void UpdateAnimalSpecificContentOnSelectedCategoryAndAnimal()
         {
             if (lboxCategory.SelectedItem != null)
             {
@@ -363,7 +366,7 @@ namespace Assignment1
         /// Updates the content of the labels in the specifications section with regards to 
         /// the selected animal only.
         /// </summary>
-        private void UpdateSpecificationsSectionOnSelectedAnimal()
+        private void UpdateAnimalSpecificOnSelectedAnimal()
         {
             if (lboxAnimal.SelectedItem is MammalType)
             {
@@ -388,9 +391,13 @@ namespace Assignment1
             {
                 case MammalType.Goose:
                     lblAnimalSpecific.Content = gooseContent;
+                    txtblckSchedule.Text = FoodScheduleConstants.GooseSchedule.ToString();
+                    lblEaterType.Content = EaterType.Herbivore.ToString();
                     break;
                 case MammalType.Zebra:
                     lblAnimalSpecific.Content = zebraContent;
+                    txtblckSchedule.Text = FoodScheduleConstants.ZebraSchedule.ToString();
+                    lblEaterType.Content = EaterType.Herbivore.ToString();
                     break;
             }
         }
@@ -405,9 +412,13 @@ namespace Assignment1
             {
                 case ReptileType.Lizard:
                     lblAnimalSpecific.Content = lizardContent;
+                    txtblckSchedule.Text = FoodScheduleConstants.LizardSchedule.ToString();
+                    lblEaterType.Content = EaterType.Omnivorous.ToString();
                     break;
                 case ReptileType.Snake:
                     lblAnimalSpecific.Content = snakeContent;
+                    txtblckSchedule.Text = FoodScheduleConstants.SnakeSchedule.ToString();
+                    lblEaterType.Content = EaterType.Carnivore.ToString();
                     break;
             }
         }
@@ -418,12 +429,12 @@ namespace Assignment1
         private void UpdateAnimalView()
         {
             lviewAnimals.Items.Clear();
-            foreach (Animal animal in animalManager.Animals)
+            for (int i = 0; i < animalManager.Count; ++i)
             {
-                lviewAnimals.Items.Add(animal);
+                lviewAnimals.Items.Add(animalManager.GetAnimal(i));
             }
         }
-        
+
         /// <summary>
         /// Allows the user to browse for an image and display it.
         /// </summary>
@@ -446,7 +457,106 @@ namespace Assignment1
             }
         }
 
-        
+        /// <summary>
+        /// Updates all the ui fields with contents of the specified animal.
+        /// </summary>
+        /// <param name="animal">The animal which contents should be shown.</param>
+        private void UpdateFromCreatedAnimal(IAnimal animal)
+        {
+            txtAge.Text = "" + animal.Age;
+            txtName.Text = animal.Name;
+            lboxGender.SelectedItem = animal.Gender;
+            if (animal is Mammal)
+            {
+                lboxCategory.SelectedItem = CategoryType.Mammal;
+                txtCategorySpecific.Text = "" + ((Mammal)animal).NumberOfTeeth;
+                if (animal is Goose)
+                {
+                    lboxAnimal.SelectedItem = MammalType.Goose;
+                    txtAnimalSpecific.Text = "" + ((Goose)animal).NumberHorns;
+                }
+                else if (animal is Zebra)
+                {
+                    lboxAnimal.SelectedItem = MammalType.Zebra;
+                    txtAnimalSpecific.Text = "" + ((Zebra)animal).NumberStripes;
+                }
+            }
+            else if (animal is Reptile)
+            {
+                lboxCategory.SelectedItem = CategoryType.Reptile;
+                txtCategorySpecific.Text = "" + ((Reptile)animal).NumberOfEggsLaid;
+                if (animal is Snake)
+                {
+                    lboxAnimal.SelectedItem = ReptileType.Snake;
+                    txtAnimalSpecific.Text = ((Snake)animal).IsPoisonous ? "y" : "n";
+                }
+                else if (animal is Lizard)
+                {
+                    lboxAnimal.SelectedItem = ReptileType.Lizard;
+                    txtAnimalSpecific.Text = ((Lizard)animal).CanDropTail ? "y" : "n";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sorts the animal list view based on the specified property.
+        /// </summary>
+        /// <param name="property">A string representation of the property. One of {"ID", "Species", "Name", "Age"}</param>
+        private void SortAnimalListViewOn(string property)
+        {
+            switch (property)
+            {
+                case "ID":
+                    animalManager.SortOnID();
+                    break;
+                case "Species":
+                    animalManager.SortOnSpecies();
+                    break;
+                case "Name":
+                    animalManager.SortOnName();
+                    break;
+                case "Age":
+                    animalManager.SortOnAge();
+                    break;
+                default:
+                    return;
+            }
+            UpdateAnimalView();
+        }
+
+        /// <summary>
+        /// Handles invalid input from the specified input element.
+        /// Shows a dialog and indicates the the element which contained the invalid input by playing an animation.
+        /// 
+        /// The user is also provided with the option to move the focus to the input control for easy editing. 
+        /// </summary>
+        /// <param name="element">The input control element.</param>
+        /// <param name="errorMessage">The errormessage to show in the dialog.</param>
+        private void HandleInvalidInputFrom(FrameworkElement element, string errorMessage)
+        {
+            // Create dialog
+            InputErrorDialog dialog = new InputErrorDialog(errorMessage);
+            Point mousePos = PointToScreen(Mouse.GetPosition(Application.Current.MainWindow));
+            dialog.Left = mousePos.X - dialog.Width / 2;
+            dialog.Top = mousePos.Y - dialog.Height / 2 - 40;
+
+            // Play animation that indicates failed input control
+            Storyboard s = (Storyboard)TryFindResource("blink");
+            Storyboard.SetTarget(s, element);
+            s.Begin();
+
+            // Show the dialog
+            if (dialog.ShowDialog() == true)
+            {
+                // If User pressed ok, we acquire focus for editing to the input control
+                element.Focus();
+            }
+
+            // Stop the animation when user has decided
+            s.Stop();
+        }
+
+
         // ***** UI event section *****
 
         private void btnUpload_Click(object sender, RoutedEventArgs e)
@@ -457,7 +567,6 @@ namespace Assignment1
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             AddAnimal();
-            
         }
 
         private void txtAge_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -479,8 +588,10 @@ namespace Assignment1
             txtCategorySpecific.Clear();
             expSpecifications.IsEnabled = false;
             expSpecifications.IsExpanded = false;
+            lblEaterType.Content = "Unknown";
+            txtblckSchedule.Text = "";
         }
-        
+
         private void cbxListAll_Unchecked(object sender, RoutedEventArgs e)
         {
             lboxAnimal.Items.Clear();
@@ -490,24 +601,56 @@ namespace Assignment1
             txtCategorySpecific.Clear();
             expSpecifications.IsEnabled = false;
             expSpecifications.IsExpanded = false;
+            lblEaterType.Content = "Unknown";
+            txtblckSchedule.Text = "";
         }
 
         private void lboxCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ShowAnimalsForSelectedCategory();
-            UpdateSpecficationsSection();
+            UpdateAnimalSpecificContent();
             txtAnimalSpecific.Clear();
             txtCategorySpecific.Clear();
             expSpecifications.IsEnabled = false;
             expSpecifications.IsExpanded = false;
+            lblEaterType.Content = "Unknown";
+            txtblckSchedule.Text = "";
         }
 
         private void lboxAnimal_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateSpecficationsSection();
+            UpdateAnimalSpecificContent();
             txtAnimalSpecific.Clear();
             expSpecifications.IsEnabled = true;
             expSpecifications.IsExpanded = true;
+        }
+
+        private void lviewAnimals_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lviewAnimals.SelectedItem is IAnimal)
+                UpdateFromCreatedAnimal((IAnimal)lviewAnimals.SelectedItem);
+        }
+
+        private void lviewAnimalsHeader_Click(object sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource is GridViewColumnHeader)
+            {
+                GridViewColumnHeader headerClicked = (GridViewColumnHeader)e.OriginalSource;
+                string header = (string)headerClicked.Content;
+                SortAnimalListViewOn(header);
+            }
+        }
+
+        private void lbox_IsKeyboardFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (sender is ListBox)
+            {
+                ListBox lBox = (ListBox)sender;
+                if (lBox.SelectedItem == null)
+                {
+                    lBox.SelectedItem = lBox.Items[0];
+                }
+            }
         }
     }
 }

@@ -55,9 +55,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Animals\AnimalComparers\AgeComparer.cs" />
+    <Compile Include="Animals\AnimalComparers\NameComparerer.cs" />
+    <Compile Include="Animals\AnimalComparers\SpeciesComparer.cs" />
+    <Compile Include="Animals\IAnimal.cs" />
     <Compile Include="Enums\Category.cs" />
+    <Compile Include="Enums\EaterType.cs" />
     <Compile Include="Enums\Gender.cs" />
     <Compile Include="Animals\Goose.cs" />
+    <Compile Include="InputErrorDialog.xaml.cs">
+      <DependentUpon>InputErrorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Food\FoodSchedule.cs" />
+    <Compile Include="Food\FoodScheduleConstants.cs" />
     <Compile Include="Utilities\InvalidInputException.cs" />
     <Compile Include="Animals\Lizard.cs" />
     <Compile Include="Animals\Mammal.cs" />
@@ -68,6 +78,10 @@
     <Compile Include="Enums\ReptileType.cs" />
     <Compile Include="Animals\Snake.cs" />
     <Compile Include="Animals\Zebra.cs" />
+    <Page Include="InputErrorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

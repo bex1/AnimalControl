@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// Daniel Bäckström, 2014-09-08, Assignment 1
-namespace Assignment1
+// Daniel Bäckström, 2014-09-25, Assignment 2
+namespace Assignment2
 {
     /// <summary>
     /// A zebra class.
@@ -17,7 +17,7 @@ namespace Assignment1
         /// <summary>
         /// Initializes a default zebra with default values.
         /// </summary>
-        internal Zebra() 
+        internal Zebra() : base(EaterType.Herbivore, FoodScheduleConstants.ZebraSchedule)
         {
         }
 
@@ -27,13 +27,18 @@ namespace Assignment1
         /// <param name="id">The ID of the zebra.</param>
         /// <param name="name">The name of the zebra.</param>
         /// <param name="age">The age of the zebra.</param>
-        /// <param name="gender">The gender of the zebra.</param>
+        /// <param name="gender">The gender of the zebra. <see cref="GenderType"/></param>
         /// <param name="nbrTeeth">The number of teeths of the zebra.</param>
         /// <param name="nbrStripes">The number of stripes of the zebra.</param>
         internal Zebra(string id, string name, uint age, GenderType gender, uint nbrTeeth, uint nbrStripes)
-            : base(id, name, age, gender, nbrTeeth)
+            : base(id, name, age, gender, EaterType.Herbivore, FoodScheduleConstants.ZebraSchedule, nbrTeeth)
         {
             this.nbrStripes = nbrStripes;   
+        }
+
+        internal Zebra(Zebra zebra) : base(zebra)
+        {
+            this.nbrStripes = zebra.nbrStripes;
         }
 
         /// <summary>
@@ -60,6 +65,11 @@ namespace Assignment1
             {
                 return base.SpecialCharacteristics + ", Number of stripes: " + nbrStripes;
             }
+        }
+
+        public override object Clone()
+        {
+            return new Zebra(this);
         }
     }
 }

@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// Daniel Bäckström, 2014-09-08, Assignment 1
-namespace Assignment1
+// Daniel Bäckström, 2014-09-25, Assignment 2
+namespace Assignment2
 {
     class Lizard : Reptile
     {
         private bool canDropTail;
+       
 
         /// <summary>
         /// Initializes a default Lizard with default values.
         /// </summary>
-        internal Lizard()
+        internal Lizard() : base(EaterType.Omnivorous, FoodScheduleConstants.LizardSchedule)
         {
         }
 
@@ -24,12 +25,18 @@ namespace Assignment1
         /// <param name="id">The ID of the lizard.</param>
         /// <param name="name">The name of the lizard.</param>
         /// <param name="age">The age of the lizard.</param>
-        /// <param name="gender">The gender of the lizard.</param>
+        /// <param name="gender">The gender of the lizard. <see cref="GenderType"/></param>
         /// <param name="nbrEggsLaid">The number of eggs laid by the lizard.</param>
         /// <param name="canDropTail">Indicates id the lizard can drop its tail.</param>
-        internal Lizard(string id, string name, uint age, GenderType gender, uint nbrEggsLaid, bool canDropTail) : base(id, name, age, gender, nbrEggsLaid)
+        internal Lizard(string id, string name, uint age, GenderType gender, uint nbrEggsLaid, bool canDropTail) 
+            : base(id, name, age, gender, EaterType.Omnivorous, FoodScheduleConstants.LizardSchedule, nbrEggsLaid)
         {
             this.canDropTail = canDropTail;   
+        }
+
+        internal Lizard(Lizard lizard) : base(lizard)
+        {
+            this.canDropTail = lizard.canDropTail;
         }
 
         /// <summary>
@@ -57,6 +64,11 @@ namespace Assignment1
             {
                 return base.SpecialCharacteristics + ", Can drop it's tail: " + (canDropTail ? "yes" : "no");
             }
+        }
+
+        public override object Clone()
+        {
+            return new Lizard(this);
         }
     }
 }

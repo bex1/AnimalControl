@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 namespace Assignment2
 {
     /// <summary>
-    /// An enum representing different groups of animals.
+    /// An enum representing different types of dietary for animals. 
     /// </summary>
-    enum CategoryType
+    enum EaterType
     {
-        Mammal,
-        Reptile
+        Carnivore,
+        Herbivore,
+        Omnivorous
     }
 }

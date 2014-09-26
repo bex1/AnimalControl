@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// Daniel Bäckström, 2014-09-08, Assignment 1
-namespace Assignment1
+// Daniel Bäckström, 2014-09-25, Assignment 2
+namespace Assignment2
 {
     /// <summary>
     /// A snake class.
@@ -17,7 +17,8 @@ namespace Assignment1
         /// <summary>
         /// Initializes a default snake with default values.
         /// </summary>
-        internal Snake() {
+        internal Snake() : base (EaterType.Carnivore, FoodScheduleConstants.SnakeSchedule) 
+        {
         }
 
         /// <summary>
@@ -26,13 +27,18 @@ namespace Assignment1
         /// <param name="id">The ID of the snake.</param>
         /// <param name="name">The name of the snake.</param>
         /// <param name="age">The age of the snake.</param>
-        /// <param name="gender">The gender of the snake.</param>
+        /// <param name="gender">The gender of the snake. <see cref="GenderType"/></param>
         /// <param name="nbrEggsLaid">The number of eggs laid by the snake.</param>
         /// <param name="poisonous">Indicates if the snake is poisonous.</param>
         internal Snake(string id, string name, uint age, GenderType gender, uint nbrEggsLaid, bool poisonous)
-            : base(id, name, age, gender, nbrEggsLaid)
+            : base(id, name, age, gender, EaterType.Carnivore, FoodScheduleConstants.SnakeSchedule, nbrEggsLaid)
         {
             this.poisonous = poisonous;   
+        }
+
+        internal Snake(Snake snake) : base(snake)
+        {
+            this.poisonous = snake.poisonous;
         }
 
         /// <summary>
@@ -59,6 +65,11 @@ namespace Assignment1
             {
                 return base.SpecialCharacteristics + ", Is poisonous: " + (poisonous ? "yes" : "no");
             }
+        }
+
+        public override object Clone()
+        {
+            return new Snake(this);
         }
     }
 }

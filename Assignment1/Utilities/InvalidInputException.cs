@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
-// Daniel Bäckström, 2014-09-08, Assignment 1
-namespace Assignment1
+// Daniel Bäckström, 2014-09-25, Assignment 2
+namespace Assignment2
 {
     /// <summary>
     /// Exception used for signaling invalid input.
     /// </summary>
     internal class InvalidInputException : Exception
     {
+        private FrameworkElement element;
         /// <summary>
         /// Initializes a default Exception.
         /// </summary>
@@ -36,6 +38,22 @@ namespace Assignment1
         internal InvalidInputException(string message, Exception inner)
             : base(message, inner)
         {
+        }
+
+        /// <summary>
+        /// Initializes a exception with the specified message.
+        /// </summary>
+        /// <param name="message">The message of the exception.</param>
+        /// <param name="element">The UI element where the error accured.</param>
+        internal InvalidInputException(string message, FrameworkElement element)
+            : base(message)
+        {
+            this.element = element;
+        }
+
+        internal FrameworkElement getElement()
+        {
+            return element;
         }
     }
 }

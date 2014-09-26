@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// Daniel Bäckström, 2014-09-08, Assignment 1
-namespace Assignment1
+// Daniel Bäckström, 2014-09-25, Assignment 2
+namespace Assignment2
 {
     /// <summary>
     /// A mammal class.
@@ -15,9 +15,12 @@ namespace Assignment1
         private uint nbrTeeth;
 
         /// <summary>
-        /// Initializes a mammal with default values.
+        /// Initializes a mammal with specified values.
+        /// The rest of the fields are default set and should be set manually before use.
         /// </summary>
-        internal Mammal() 
+        /// <param name="eaterType">The type of eater the mammal is. <see cref="EaterType"/></param>
+        /// <param name="foodSchedule">The food schedule of the mammal.  <see cref="FoodSchedule"/></param>
+        internal Mammal(EaterType eaterType, FoodSchedule foodSchedule) : base(eaterType, foodSchedule)
         {
         }
 
@@ -27,11 +30,19 @@ namespace Assignment1
         /// <param name="id">The ID of the mammal.</param>
         /// <param name="name">The name of the mammal.</param>
         /// <param name="age">The age of the mammal.</param>
-        /// <param name="gender">The gender of the mammal.</param>
+        /// <param name="gender">The gender of the mammal. <see cref="GenderType"/></param>
+        /// <param name="eaterType">The type of eater the mammal is. <see cref="EaterType"/></param>
+        /// <param name="foodSchedule">The food schedule of the mammal.  <see cref="FoodSchedule"/></param>
         /// <param name="nbrTeeth">The number of teeths of the mammal.</param>
-        internal Mammal(string id, string name, uint age, GenderType gender, uint nbrTeeth) : base(id, name, age, gender)
+        internal Mammal(string id, string name, uint age, GenderType gender, EaterType eaterType, FoodSchedule foodSchedule, uint nbrTeeth) 
+            : base(id, name, age, gender, eaterType, foodSchedule)
         {
             this.nbrTeeth = nbrTeeth;   
+        }
+
+        internal Mammal(Mammal mammal) : base(mammal)
+        {
+            this.nbrTeeth = mammal.nbrTeeth; 
         }
 
         /// <summary>

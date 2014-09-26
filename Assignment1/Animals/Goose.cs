@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// Daniel Bäckström, 2014-09-08, Assignment 1
-namespace Assignment1
+// Daniel Bäckström, 2014-09-25, Assignment 2
+namespace Assignment2
 {
     /// <summary>
     /// A goose class.
@@ -17,7 +17,7 @@ namespace Assignment1
         /// <summary>
         /// Initializes a default goose with default values.
         /// </summary>
-        internal Goose()
+        internal Goose() : base(EaterType.Herbivore, FoodScheduleConstants.GooseSchedule)
         {
         }
 
@@ -27,12 +27,18 @@ namespace Assignment1
         /// <param name="id">The ID of the goose.</param>
         /// <param name="name">The name of the goose.</param>
         /// <param name="age">The age of the goose.</param>
-        /// <param name="gender">The gender of the goose.</param>
+        /// <param name="gender">The gender of the goose. <see cref="GenderType"/></param>
         /// <param name="nbrTeeth">The number of teeths of the goose.</param>
         /// <param name="nbrHorns">The number of horns of the goose.</param>
-        internal Goose(string id, string name, uint age, GenderType gender, uint nbrTeeth, uint nbrHorns) : base(id, name, age, gender, nbrTeeth)
+        internal Goose(string id, string name, uint age, GenderType gender, uint nbrTeeth, uint nbrHorns) 
+            : base(id, name, age, gender, EaterType.Herbivore, FoodScheduleConstants.GooseSchedule, nbrTeeth)
         {
             this.nbrHorns = nbrHorns;   
+        }
+
+        internal Goose(Goose goose) : base(goose)
+        {
+            this.nbrHorns = goose.nbrHorns;
         }
 
         /// <summary>
@@ -59,6 +65,11 @@ namespace Assignment1
             {
                 return base.SpecialCharacteristics + ", Number of horns: " + nbrHorns;
             }
+        }
+
+        public override object Clone()
+        {
+            return new Goose(this);
         }
     }
 }
