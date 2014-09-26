@@ -28,18 +28,18 @@
                 </LinearGradientBrush>
             </Border.BorderBrush>
             <Grid>
-                <CheckBox x:Name="cbxListAll" Content="List All Animals" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="536,258,0,0" Checked="cbxListAll_Checked" Unchecked="cbxListAll_Unchecked"/>
-                <ListBox x:Name="lboxAnimal" IsKeyboardFocusedChanged="lbox_IsKeyboardFocusedChanged" HorizontalAlignment="Left" Height="232" Margin="373,38,0,0" VerticalAlignment="Top" Width="143" Background="#FF3A3838" RenderTransformOrigin="0.5,0.5" BorderThickness="0" SelectionChanged="lboxAnimal_SelectionChanged" Foreground="White">
+                <CheckBox x:Name="cbxListAll" Content="List All Animals" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="536,258,0,0" Checked="cbxListAll_Checked" Unchecked="cbxListAll_Unchecked" TabIndex="11"/>
+                <ListBox x:Name="lboxAnimal" IsKeyboardFocusedChanged="lbox_IsKeyboardFocusedChanged" HorizontalAlignment="Left" Height="232" Margin="373,38,0,0" VerticalAlignment="Top" Width="143" Background="#FF3A3838" RenderTransformOrigin="0.5,0.5" BorderThickness="0" SelectionChanged="lboxAnimal_SelectionChanged" Foreground="White" TabIndex="5">
                     <ListBox.Effect>
                         <DropShadowEffect/>
                     </ListBox.Effect>
                 </ListBox>
-                <ListBox x:Name="lboxCategory" IsKeyboardFocusedChanged="lbox_IsKeyboardFocusedChanged" HorizontalAlignment="Left" Height="234" Margin="250,36,0,0" VerticalAlignment="Top" Width="100" Background="#FF3A3838" BorderThickness="3,3,0,0" SelectionChanged="lboxCategory_SelectionChanged" Foreground="White" BorderBrush="#FF3A3838" >
+                <ListBox x:Name="lboxCategory" IsKeyboardFocusedChanged="lbox_IsKeyboardFocusedChanged" HorizontalAlignment="Left" Height="234" Margin="250,36,0,0" VerticalAlignment="Top" Width="100" Background="#FF3A3838" BorderThickness="3,3,0,0" SelectionChanged="lboxCategory_SelectionChanged" Foreground="White" BorderBrush="#FF3A3838" TabIndex="4" >
                     <ListBox.Effect>
                         <DropShadowEffect/>
                     </ListBox.Effect>
                 </ListBox>
-                <ListBox x:Name="lboxGender" IsKeyboardFocusedChanged="lbox_IsKeyboardFocusedChanged" HorizontalAlignment="Left" Height="118" Margin="60,152,0,0" VerticalAlignment="Top" Width="120" Background="#FF3A3838" BorderThickness="0" Foreground="White">
+                <ListBox x:Name="lboxGender" IsKeyboardFocusedChanged="lbox_IsKeyboardFocusedChanged" HorizontalAlignment="Left" Height="118" Margin="60,152,0,0" VerticalAlignment="Top" Width="120" Background="#FF3A3838" BorderThickness="0" Foreground="White" TabIndex="3">
                     <ListBox.Effect>
                         <DropShadowEffect/>
                     </ListBox.Effect>
@@ -56,12 +56,12 @@
                     </Ellipse.Fill>
                 </Ellipse>
                 <Label Content="Name:" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" FontFamily="Verdana"/>
-                <TextBox x:Name="txtName" HorizontalAlignment="Left" Height="23" Margin="60,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120">
+                <TextBox x:Name="txtName" HorizontalAlignment="Left" Height="23" Margin="60,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TabIndex="1">
                     <TextBox.Effect>
                         <DropShadowEffect/>
                     </TextBox.Effect>
                 </TextBox>
-                <TextBox x:Name="txtAge" HorizontalAlignment="Left" Height="23" Margin="60,80,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" PreviewTextInput="txtAge_PreviewTextInput">
+                <TextBox x:Name="txtAge" HorizontalAlignment="Left" Height="23" Margin="60,80,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" PreviewTextInput="txtAge_PreviewTextInput" TabIndex="2">
                     <TextBox.Effect>
                         <DropShadowEffect/>
                     </TextBox.Effect>
@@ -70,7 +70,7 @@
                 <Label Content="Gender" HorizontalAlignment="Left" Margin="90,122,0,0" VerticalAlignment="Top" FontFamily="Verdana"/>
                 <Label Content="Animal" HorizontalAlignment="Left" Margin="419,8,0,0" VerticalAlignment="Top" FontFamily="Verdana"/>
                 <Label Content="Category" HorizontalAlignment="Left" Margin="270,13,0,0" VerticalAlignment="Top" FontFamily="Verdana"/>
-                <Expander x:Name="expSpecifications" Header="Specifications" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="536,14,0,0" FontFamily="Verdana" IsEnabled="False">
+                <Expander x:Name="expSpecifications" Header="Specifications" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="536,14,0,0" FontFamily="Verdana" IsEnabled="False" TabIndex="6">
                     <Grid Background="#FFE5E5E5">
                         <Rectangle Fill="White" HorizontalAlignment="Left" Height="210" Stroke="#FF7A7979" VerticalAlignment="Top" Width="246" Margin="0,0,-76,-149" StrokeThickness="2">
                             <Rectangle.Effect>
@@ -88,24 +88,24 @@
                                 </TransformGroup>
                             </Label.RenderTransform>
                         </Label>
-                        <TextBox x:Name="txtCategorySpecific" HorizontalAlignment="Left" Height="23" Margin="138,10,-60,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="92">
+                        <TextBox x:Name="txtCategorySpecific" HorizontalAlignment="Left" Height="23" Margin="138,10,-60,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="92" TabIndex="7">
                             <TextBox.Effect>
                                 <DropShadowEffect/>
                             </TextBox.Effect>
                         </TextBox>
-                        <TextBox x:Name="txtAnimalSpecific" HorizontalAlignment="Left" Height="23" Margin="138,58,-60,-20" TextWrapping="Wrap" VerticalAlignment="Top" Width="92">
+                        <TextBox x:Name="txtAnimalSpecific" HorizontalAlignment="Left" Height="23" Margin="138,58,-60,-20" TextWrapping="Wrap" VerticalAlignment="Top" Width="92" TabIndex="8">
                             <TextBox.Effect>
                                 <DropShadowEffect/>
                             </TextBox.Effect>
                         </TextBox>
                     </Grid>
                 </Expander>
-                <Button x:Name="btnUpload" Content="Upload image" HorizontalAlignment="Left" VerticalAlignment="Top" Width="114" Margin="806,168,0,0" Background="#FF3A3838" Foreground="White" BorderThickness="0" Height="38" Click="btnUpload_Click">
+                <Button x:Name="btnUpload" Content="Upload image" HorizontalAlignment="Left" VerticalAlignment="Top" Width="114" Margin="806,168,0,0" Background="#FF3A3838" Foreground="White" BorderThickness="0" Height="38" Click="btnUpload_Click" TabIndex="9">
                     <Button.Effect>
                         <DropShadowEffect/>
                     </Button.Effect>
                 </Button>
-                <Button x:Name="btnAdd" IsDefault="True" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="114" Margin="806,232,0,0" Background="#FF62C533" Foreground="White" BorderThickness="0" Height="38" Click="btnAdd_Click">
+                <Button x:Name="btnAdd" IsDefault="True" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="114" Margin="806,232,0,0" Background="#FF62C533" Foreground="White" BorderThickness="0" Height="38" Click="btnAdd_Click" TabIndex="10">
                     <Button.Effect>
                         <DropShadowEffect/>
                     </Button.Effect>

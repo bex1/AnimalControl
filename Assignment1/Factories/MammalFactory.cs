@@ -20,8 +20,8 @@ namespace Assignment2
         {
             switch (mammalType)
             {
-                case MammalType.Goose:
-                    return new Goose();
+                case MammalType.Elk:
+                    return new Elk();
                 case MammalType.Zebra:
                     return new Zebra();
                 default:

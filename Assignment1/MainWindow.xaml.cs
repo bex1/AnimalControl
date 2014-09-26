@@ -127,9 +127,9 @@ namespace Assignment2
             if (animal is Mammal)
             {
                 ((Mammal)animal).NumberOfTeeth = ReadUIntFromTextBox(txtCategorySpecific, "Number of teeth is not valid!");
-                if (animal is Goose)
+                if (animal is Elk)
                 {
-                    ((Goose)animal).NumberHorns = ReadUIntFromTextBox(txtAnimalSpecific, "Number of horns is not valid!");
+                    ((Elk)animal).NumberHorns = ReadUIntFromTextBox(txtAnimalSpecific, "Number of horns is not valid!");
                 }
                 else if (animal is Zebra)
                 {
@@ -389,7 +389,7 @@ namespace Assignment2
             MammalType selectedMammal = (MammalType)lboxAnimal.SelectedItem;
             switch (selectedMammal)
             {
-                case MammalType.Goose:
+                case MammalType.Elk:
                     lblAnimalSpecific.Content = gooseContent;
                     txtblckSchedule.Text = FoodScheduleConstants.GooseSchedule.ToString();
                     lblEaterType.Content = EaterType.Herbivore.ToString();
@@ -470,10 +470,10 @@ namespace Assignment2
             {
                 lboxCategory.SelectedItem = CategoryType.Mammal;
                 txtCategorySpecific.Text = "" + ((Mammal)animal).NumberOfTeeth;
-                if (animal is Goose)
+                if (animal is Elk)
                 {
-                    lboxAnimal.SelectedItem = MammalType.Goose;
-                    txtAnimalSpecific.Text = "" + ((Goose)animal).NumberHorns;
+                    lboxAnimal.SelectedItem = MammalType.Elk;
+                    txtAnimalSpecific.Text = "" + ((Elk)animal).NumberHorns;
                 }
                 else if (animal is Zebra)
                 {

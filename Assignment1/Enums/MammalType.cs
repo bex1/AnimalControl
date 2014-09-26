@@ -11,7 +11,7 @@ namespace Assignment2
     /// </summary>
     enum MammalType
     {
-        Goose,
+        Elk,
         Zebra
     }
 }

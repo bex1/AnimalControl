@@ -62,7 +62,7 @@
     <Compile Include="Enums\Category.cs" />
     <Compile Include="Enums\EaterType.cs" />
     <Compile Include="Enums\Gender.cs" />
-    <Compile Include="Animals\Goose.cs" />
+    <Compile Include="Animals\Elk.cs" />
     <Compile Include="InputErrorDialog.xaml.cs">
       <DependentUpon>InputErrorDialog.xaml</DependentUpon>
     </Compile>
