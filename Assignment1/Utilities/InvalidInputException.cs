@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using System.Windows;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment2
+namespace Assignment3
 {
     /// <summary>
     /// Exception used for signaling invalid input.
     /// </summary>
-    internal class InvalidInputException : Exception
+    public class InvalidInputException : Exception
     {
         private FrameworkElement element;
         /// <summary>

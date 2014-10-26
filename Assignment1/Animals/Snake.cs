@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment2
+namespace Assignment3
 {
     /// <summary>
     /// A snake class.
     /// </summary>
-    class Snake : Reptile
+    public class Snake : Reptile
     {
         bool poisonous;
 
@@ -34,11 +34,6 @@ namespace Assignment2
             : base(id, name, age, gender, EaterType.Carnivore, FoodScheduleConstants.SnakeSchedule, nbrEggsLaid)
         {
             this.poisonous = poisonous;   
-        }
-
-        internal Snake(Snake snake) : base(snake)
-        {
-            this.poisonous = snake.poisonous;
         }
 
         /// <summary>
@@ -65,11 +60,6 @@ namespace Assignment2
             {
                 return base.SpecialCharacteristics + ", Is poisonous: " + (poisonous ? "yes" : "no");
             }
-        }
-
-        public override object Clone()
-        {
-            return new Snake(this);
         }
     }
 }

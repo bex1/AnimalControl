@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment2
+namespace Assignment3
 {
     /// <summary>
     /// A zebra class.
     /// </summary>
-    class Zebra : Mammal
+    public class Zebra : Mammal
     {
         private uint nbrStripes;
 
@@ -34,11 +34,6 @@ namespace Assignment2
             : base(id, name, age, gender, EaterType.Herbivore, FoodScheduleConstants.ZebraSchedule, nbrTeeth)
         {
             this.nbrStripes = nbrStripes;   
-        }
-
-        internal Zebra(Zebra zebra) : base(zebra)
-        {
-            this.nbrStripes = zebra.nbrStripes;
         }
 
         /// <summary>
@@ -65,11 +60,6 @@ namespace Assignment2
             {
                 return base.SpecialCharacteristics + ", Number of stripes: " + nbrStripes;
             }
-        }
-
-        public override object Clone()
-        {
-            return new Zebra(this);
         }
     }
 }

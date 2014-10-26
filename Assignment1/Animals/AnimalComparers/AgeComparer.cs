@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assignment2
+namespace Assignment3
 {
-    sealed class AgeComparer : Comparer<IAnimal>
+    public sealed class AgeComparer : Comparer<IAnimal>
     {
         public override int Compare(IAnimal x, IAnimal y)
         {

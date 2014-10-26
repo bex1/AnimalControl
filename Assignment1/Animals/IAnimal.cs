@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment2
+namespace Assignment3
 {
-    interface IAnimal : IComparable<IAnimal>, ICloneable
+    public interface IAnimal : IComparable<IAnimal>
     {
         /// <summary>
         /// The gender of the animal.

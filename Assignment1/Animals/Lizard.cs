@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment2
+namespace Assignment3
 {
-    class Lizard : Reptile
+    public class Lizard : Reptile
     {
         private bool canDropTail;
        
@@ -32,11 +32,6 @@ namespace Assignment2
             : base(id, name, age, gender, EaterType.Omnivorous, FoodScheduleConstants.LizardSchedule, nbrEggsLaid)
         {
             this.canDropTail = canDropTail;   
-        }
-
-        internal Lizard(Lizard lizard) : base(lizard)
-        {
-            this.canDropTail = lizard.canDropTail;
         }
 
         /// <summary>
@@ -64,11 +59,6 @@ namespace Assignment2
             {
                 return base.SpecialCharacteristics + ", Can drop it's tail: " + (canDropTail ? "yes" : "no");
             }
-        }
-
-        public override object Clone()
-        {
-            return new Lizard(this);
         }
     }
 }

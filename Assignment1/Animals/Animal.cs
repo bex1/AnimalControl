@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment2
+namespace Assignment3
 {
 
     // Note that the use of public on some of the different animal classes properties
@@ -14,7 +14,7 @@ namespace Assignment2
     /// <summary>
     /// Base animal class.
     /// </summary>
-    abstract class Animal : IAnimal
+    public abstract class Animal : IAnimal
     {
         private string id;
         private string name;
@@ -62,20 +62,6 @@ namespace Assignment2
             this.gender = gender;
             this.eaterType = eaterType;
             this.foodSchedule = foodSchedule;
-        }
-
-        /// <summary>
-        /// Animal copy constructor.
-        /// </summary>
-        /// <param name="animal">The animal to copy.</param>
-        internal Animal(Animal animal)
-        {
-            this.id = animal.id;
-            this.name = animal.name;
-            this.age = animal.age;
-            this.gender = animal.gender;
-            this.eaterType = animal.eaterType;
-            this.foodSchedule = (FoodSchedule)animal.foodSchedule.Clone();
         }
 
         /// <summary>
@@ -197,7 +183,5 @@ namespace Assignment2
         {
             return this.id.CompareTo(other.ID);
         }
-
-        public abstract object Clone();
     }
 }

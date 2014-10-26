@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment2
+namespace Assignment3
 {
     /// <summary>
     /// Statically internal hard coded schedules for different animals.
     /// </summary>
-    static class FoodScheduleConstants
+    public static class FoodScheduleConstants
     {
         internal static readonly FoodSchedule LizardSchedule = new FoodSchedule(new List<string>(new string[] { "Morning: A handful of leafs.", "Lunch: A handful of flies.", "Evening: More leafs!" }));
         internal static readonly FoodSchedule ZebraSchedule  = new FoodSchedule(new List<string>(new string[] { "Morning: A crate of grass.", "Lunch: Another crate of grass.", "Evening: Grass grass grass grass...." }));

@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment2
+namespace Assignment3
 {
     /// <summary>
     /// A elk class.
     /// </summary>
-    class Elk : Mammal
+    public class Elk : Mammal
     {
         private uint nbrHorns;
 
@@ -34,11 +34,6 @@ namespace Assignment2
             : base(id, name, age, gender, EaterType.Herbivore, FoodScheduleConstants.GooseSchedule, nbrTeeth)
         {
             this.nbrHorns = nbrHorns;   
-        }
-
-        internal Elk(Elk elk) : base(elk)
-        {
-            this.nbrHorns = elk.nbrHorns;
         }
 
         /// <summary>
@@ -65,11 +60,6 @@ namespace Assignment2
             {
                 return base.SpecialCharacteristics + ", Number of horns: " + nbrHorns;
             }
-        }
-
-        public override object Clone()
-        {
-            return new Elk(this);
         }
     }
 }

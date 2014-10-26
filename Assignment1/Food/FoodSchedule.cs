@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment2
+namespace Assignment3
 {
     /// <summary>
     /// A container class holding a list of food schedule descriptions.
     /// </summary>
-    sealed class FoodSchedule : ICloneable
+    public sealed class FoodSchedule : ICloneable
     {
         private List<string> foodDescriptionList;
 

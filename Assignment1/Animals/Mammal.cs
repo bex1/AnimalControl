@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment2
+namespace Assignment3
 {
     /// <summary>
     /// A mammal class.
     /// </summary>
-    abstract class Mammal : Animal
+    public abstract class Mammal : Animal
     {
         private uint nbrTeeth;
 
@@ -38,11 +38,6 @@ namespace Assignment2
             : base(id, name, age, gender, eaterType, foodSchedule)
         {
             this.nbrTeeth = nbrTeeth;   
-        }
-
-        internal Mammal(Mammal mammal) : base(mammal)
-        {
-            this.nbrTeeth = mammal.nbrTeeth; 
         }
 
         /// <summary>

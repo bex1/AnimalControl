@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment2
+namespace Assignment3
 {
     /// <summary>
     /// A factory for objects inheriting mammal.
     /// </summary>
-    static class MammalFactory
+    public static class MammalFactory
     {
         /// <summary>
         /// Creates a new instance of the specified mammal type.
