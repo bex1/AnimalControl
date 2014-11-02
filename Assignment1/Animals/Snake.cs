@@ -10,6 +10,7 @@ namespace Assignment3
     /// <summary>
     /// A snake class.
     /// </summary>
+    [Serializable]
     public class Snake : Reptile
     {
         bool poisonous;

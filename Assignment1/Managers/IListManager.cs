@@ -77,5 +77,33 @@ namespace Assignment3
         /// </summary>
         /// <param name="comparer">A comparer of the elements.</param>
         void Sort(IComparer<T> comparer);
+
+        /// <summary>
+        /// Serializes the list manager to the specified binary file.
+        /// </summary>
+        /// <param name="fileName">The filepath of the file.</param>
+        /// <returns>True if successfull, false otherwise.</returns>
+        bool BinarySerialize(string fileName);
+
+        /// <summary>
+        /// DeSerializes the list manager from the specified binary file.
+        /// </summary>
+        /// <param name="fileName">The filepath of the file.</param>
+        /// <returns>True if successfull, false otherwise.</returns>
+        bool BinaryDeSerialize(string fileName);
+
+        /// <summary>
+        /// Serializes the list manager to the specified XML file.
+        /// </summary>
+        /// <param name="fileName">The filepath of the file.</param>
+        /// <returns>True if successfull, false otherwise.</returns>
+        bool XMLSerialize(string fileName);
+
+        /// <summary>
+        /// DeSerializes the list manager from the specified XML file.
+        /// </summary>
+        /// <param name="fileName">The filepath of the file.</param>
+        /// <returns>True if successfull, false otherwise.</returns>
+        bool XMLDeSerialize(string fileName);
     }
 }

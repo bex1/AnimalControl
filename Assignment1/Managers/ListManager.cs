@@ -10,6 +10,7 @@ namespace Assignment3
     /// A manager implementation which can be used as a generic list based registry. 
     /// </summary>
     /// <typeparam name="T">The type of register data.</typeparam>
+    [Serializable]
     public class ListManager<T> : IListManager<T>
     {
         private List<T> list;
@@ -137,6 +138,47 @@ namespace Assignment3
         public void Sort(IComparer<T> comparer)
         {
             list.Sort(comparer);
+        }
+
+
+        /// <summary>
+        /// Serializes the list manager to the specified binary file.
+        /// </summary>
+        /// <param name="fileName">The filepath of the file.</param>
+        /// <returns>True if successfull, false otherwise.</returns>
+        public bool BinarySerialize(string fileName)
+        {
+
+        }
+
+        /// <summary>
+        /// DeSerializes the list manager from the specified binary file.
+        /// </summary>
+        /// <param name="fileName">The filepath of the file.</param>
+        /// <returns>True if successfull, false otherwise.</returns>
+        public bool BinaryDeSerialize(string fileName)
+        {
+
+        }
+
+        /// <summary>
+        /// Serializes the list manager to the specified XML file.
+        /// </summary>
+        /// <param name="fileName">The filepath of the file.</param>
+        /// <returns>True if successfull, false otherwise.</returns>
+        public bool XMLSerialize(string fileName)
+        {
+
+        }
+
+        /// <summary>
+        /// DeSerializes the list manager from the specified XML file.
+        /// </summary>
+        /// <param name="fileName">The filepath of the file.</param>
+        /// <returns>True if successfull, false otherwise.</returns>
+        public bool XMLDeSerialize(string fileName)
+        {
+
         }
     }
 }

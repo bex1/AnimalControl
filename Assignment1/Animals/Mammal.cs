@@ -10,6 +10,7 @@ namespace Assignment3
     /// <summary>
     /// A mammal class.
     /// </summary>
+    [Serializable]
     public abstract class Mammal : Animal
     {
         private uint nbrTeeth;

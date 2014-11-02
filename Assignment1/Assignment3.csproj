@@ -70,6 +70,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="UnsavedChangesDialog.xaml.cs">
+      <DependentUpon>UnsavedChangesDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Managers\StaffManager.cs" />
     <Compile Include="Utilities\AnimalRecipesDictionary.cs" />
     <Compile Include="Animals\AnimalComparers\AgeComparer.cs" />
@@ -86,6 +89,7 @@
     <Compile Include="Food\FoodSchedule.cs" />
     <Compile Include="Food\FoodScheduleConstants.cs" />
     <Compile Include="Managers\IListManager.cs" />
+    <Compile Include="Utilities\BinSerializerUtility.cs" />
     <Compile Include="Utilities\InvalidInputException.cs" />
     <Compile Include="Animals\Lizard.cs" />
     <Compile Include="Animals\Mammal.cs" />
@@ -100,6 +104,11 @@
     <Compile Include="Recipes\Recipe.cs" />
     <Compile Include="Managers\RecipeManager.cs" />
     <Compile Include="Staff\Staff.cs" />
+    <Compile Include="Utilities\XMLSerializerUtility.cs" />
+    <Page Include="UnsavedChangesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="InputErrorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

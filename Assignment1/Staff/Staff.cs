@@ -9,6 +9,7 @@ namespace Assignment3
     /// <summary>
     /// A staff class with a name and a list of qualifications.
     /// </summary>
+    [Serializable]
     public class Staff
     {
         private string name;

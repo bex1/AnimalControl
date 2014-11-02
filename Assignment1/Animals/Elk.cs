@@ -10,6 +10,7 @@ namespace Assignment3
     /// <summary>
     /// A elk class.
     /// </summary>
+    [Serializable]
     public class Elk : Mammal
     {
         private uint nbrHorns;

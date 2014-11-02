@@ -9,6 +9,7 @@ namespace Assignment3
     /// <summary>
     /// A staff registry.
     /// </summary>
+    [Serializable]
     public class StaffManager : ListManager<Staff>
     {
     }

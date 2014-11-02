@@ -10,6 +10,7 @@ namespace Assignment3
     /// <summary>
     /// A reptile class.
     /// </summary>
+    [Serializable]
     public abstract class Reptile : Animal
     {
         private uint nbrEggsLaid;

@@ -9,6 +9,7 @@ namespace Assignment3
     /// <summary>
     /// A recipe with a name and a couple of ingredients.
     /// </summary>
+    [Serializable]
     public class Recipe
     {
         private IListManager<string> ingredients;

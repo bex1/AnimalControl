@@ -10,6 +10,7 @@ namespace Assignment3
     /// <summary>
     /// A zebra class.
     /// </summary>
+    [Serializable]
     public class Zebra : Mammal
     {
         private uint nbrStripes;

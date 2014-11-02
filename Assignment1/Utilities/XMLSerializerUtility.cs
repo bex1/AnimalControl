@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assignment3
 {
-    /// <summary>
-    /// A recipe registry.
-    /// </summary>
-    [Serializable]
-    public class RecipeManager : ListManager<Recipe>
+    public class XMLSerializerUtility
     {
     }
 }

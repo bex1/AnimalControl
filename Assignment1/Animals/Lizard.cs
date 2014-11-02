@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 // Daniel Bäckström, 2014-09-25, Assignment 2
 namespace Assignment3
 {
+    [Serializable]
     public class Lizard : Reptile
     {
         private bool canDropTail;

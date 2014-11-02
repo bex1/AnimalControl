@@ -14,6 +14,7 @@ namespace Assignment3
     /// <summary>
     /// Base animal class.
     /// </summary>
+    [Serializable]
     public abstract class Animal : IAnimal
     {
         private string id;

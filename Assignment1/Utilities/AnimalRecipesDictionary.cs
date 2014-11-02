@@ -9,6 +9,7 @@ namespace Assignment3
     /// <summary>
     /// A dictionary for use with associating an animal ID with a list of recipes.
     /// </summary>
+    [Serializable]
     public class AnimalRecipesDictionary
     {
         Dictionary<string, List<Recipe>> associatedRecipes;

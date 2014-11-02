@@ -10,6 +10,7 @@ namespace Assignment3
     /// <summary>
     /// Registry class for the animals.
     /// </summary>
+    [Serializable]
     public class AnimalManager : ListManager<IAnimal>
     {
         private static readonly string mammalIdBase = "mml";
