@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assignment3
+namespace Assignment4
 {
     /// <summary>
     /// A staff class with a name and a list of qualifications.
@@ -13,7 +13,7 @@ namespace Assignment3
     public class Staff
     {
         private string name;
-        private IListManager<string> qualifications;
+        private ListManager<string> qualifications;
 
         /// <summary>
         /// Default initializes the staff member.
@@ -26,11 +26,15 @@ namespace Assignment3
         /// <summary>
         /// Gives acccess to the list of qualifications.
         /// </summary>
-        internal IListManager<string> Qualifications
+        public ListManager<string> Qualifications
         {
             get
             {
                 return qualifications;
+            }
+            set
+            {
+                qualifications = value;
             }
         }
 

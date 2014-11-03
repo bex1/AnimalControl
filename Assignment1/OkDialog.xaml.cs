@@ -15,15 +15,15 @@ using System.Windows.Shapes;
 namespace Assignment4
 {
     /// <summary>
-    /// Unsaved changes dialog prompt.
+    /// Simple one buttom ok dialog.
     /// </summary>
-    public partial class UnsavedChangesDialog : Window
+    public partial class OkDialog : Window
     {
-        public UnsavedChangesDialog(string msg)
+        public OkDialog(string msg)
         {
             InitializeComponent();
 
-            txtblckError.Text = msg;
+            txtblckError.Text = msg; 
 
             btnOk.Focus();
         }

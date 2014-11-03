@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Assignment3
+namespace Assignment4
 {
     /// <summary>
     /// Error dialog for invalid input.

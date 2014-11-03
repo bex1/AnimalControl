@@ -1,4 +1,4 @@
-﻿<Window x:Class="Assignment3.InputErrorDialog"
+﻿<Window x:Class="Assignment4.InputErrorDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="ErrorDialog" Height="300" Width="300" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True">

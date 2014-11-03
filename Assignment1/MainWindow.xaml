@@ -1,8 +1,8 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="AnimalWindow" mc:Ignorable="d" x:Class="Assignment3.MainWindow"
-        Title="Animal Editor" Height="791" Width="1343" ResizeMode="NoResize" Background="#FF3A3838">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="AnimalWindow" mc:Ignorable="d" x:Class="Assignment4.MainWindow"
+        Title="Animal Editor" Height="791" Width="1343" ResizeMode="NoResize" Background="#FF3A3838" Closing="AnimalWindow_Closing">
     <Window.Resources>
 
         <LinearGradientBrush x:Key="gradientBrushTabControlHeader" StartPoint="0,0.5" EndPoint="1,0.5">
@@ -728,12 +728,14 @@
         <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Width="1333" IsMainMenu="True" Background="#FF3A3838" Height="22">
             <MenuItem x:Name="mnuFile" Header="_File" Foreground="White" Height="30" Background="#FF3A3838" Style="{StaticResource MLB_MenuItem}">
                 <MenuItem x:Name="mnuFileNew" Header="_New..." Foreground="White" Background="#FF3A3838" BorderBrush="#FF3A3838" InputGestureText="Ctrl-N" Click="mnuFileNew_Click"/>
-                <MenuItem x:Name="mnuFileOpen" Header="_Open..." Foreground="White" Background="#FF3A3838" BorderBrush="#FF3A3838" InputGestureText="Ctrl-O"/>
+                <MenuItem x:Name="mnuFileOpen" Header="_Open..." Foreground="White" Background="#FF3A3838" BorderBrush="#FF3A3838" InputGestureText="Ctrl-O" Click="mnuFileOpen_Click"/>
                 <MenuItem x:Name="mnuFileSave" Header="_Save" Foreground="White" Background="#FF3A3838" BorderBrush="#FF3A3838" InputGestureText="Ctrl-S" Click="mnuFileSave_Click"/>
                 <MenuItem x:Name="mnuFileSaveAs" Header="_Save as..." Foreground="White" Background="#FF3A3838" BorderBrush="#FF747474" BorderThickness="0,0,0,1" Padding="0,0,0,1" Click="mnuFileSaveAs_Click"/>
-                <MenuItem x:Name="mnuFileXMLImport" Header="_Import From XML File" Foreground="White" Background="#FF3A3838" BorderBrush="#FF3A3838"/>
-                <MenuItem x:Name="mnuFileXMLExport" Header="_Export To XML File" Foreground="White" Background="#FF3A3838" BorderBrush="#FF747474" BorderThickness="0,0,0,1" Padding="0,0,0,1"/>
-                <MenuItem x:Name="mnuFileExit" Header="_Exit" Foreground="White" Background="#FF3A3838" BorderBrush="#FF3A3838" InputGestureText="Alt-X"/>
+                <MenuItem x:Name="mnuFileXMLImportRecipes" Header="_Import Recipes From XML File" Foreground="White" Background="#FF3A3838" BorderBrush="#FF3A3838" Click="mnuFileXMLImportRecipes_Click"/>
+                <MenuItem x:Name="mnuFileXMLExportRecipes" Header="_Export Recipes To XML File" Foreground="White" Background="#FF3A3838" BorderBrush="#FF3A3838" Click="mnuFileXMLExportRecipes_Click"/>
+                <MenuItem x:Name="mnuFileXMLImportStaff" Header="_Import Staff From XML File" Foreground="White" Background="#FF3A3838" BorderBrush="#FF3A3838" Click="mnuFileXMLImportStaff_Click"/>
+                <MenuItem x:Name="mnuFileXMLExportStaff" Header="_Export Staff To XML File" Foreground="White" Background="#FF3A3838" BorderBrush="#FF747474" BorderThickness="0,0,0,1" Padding="0,0,0,1" Click="mnuFileXMLExportStaff_Click"/>
+                <MenuItem x:Name="mnuFileExit" Header="_Exit" Foreground="White" Background="#FF3A3838" BorderBrush="#FF3A3838" InputGestureText="Alt-X" Click="mnuFileExit_Click"/>
             </MenuItem>
         </Menu>
     </Grid>

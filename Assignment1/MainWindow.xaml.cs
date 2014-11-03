@@ -15,9 +15,10 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Animation;
+using System.IO;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment3
+namespace Assignment4
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -32,13 +33,7 @@ namespace Assignment3
         private static readonly string lizardContent = "Can loose tail(y/n):";
         private static readonly string snakeContent = "Is poisonous(y/n):";
 
-        private AnimalManager animalManager;
-        private RecipeManager recipeManager;
-        private StaffManager staffManager;
-        private AnimalRecipesDictionary animalRecipes;
-
-        private bool unsavedChanges;
-        private string workingFilePath;
+        private Session session;
 
         // ***** Initialization section *****
 
@@ -53,14 +48,8 @@ namespace Assignment3
 
             AddKeyBoardHandlers();
 
-            animalManager = new AnimalManager();
-            recipeManager = new RecipeManager();
-            staffManager = new StaffManager();
-            animalRecipes = new AnimalRecipesDictionary();
-            workingFilePath = String.Empty;
+            session = new Session();
         }
-
-        
 
         /// <summary>
         /// Initializes the GUI.
@@ -95,6 +84,201 @@ namespace Assignment3
 
         // ***** Input section *****
 
+        // ** File handling input
+
+        /// <summary>
+        /// Starts a new session.
+        /// 
+        /// If the user has made unsaved changes a dialog will be shown asking for confirmation to start a new session, 
+        /// loosing the unsaved changes in the process, or to abort.
+        /// </summary>
+        private void NewSession()
+        {
+            if (session.UnsavedChanges)
+            {
+                // Create dialog
+                UnsavedChangesDialog dialog = new UnsavedChangesDialog("There are unsaved changes.\nThe unsaved changes will be lost if a new session is started.");
+                // Set to owner to center over mainwindow on show
+                dialog.Owner = this;
+
+                // Show the dialog
+                if (dialog.ShowDialog() == true)
+                {
+                    // If user wants to abort just return
+                    return;
+                }
+            }
+
+            // Ok to start a new session...
+
+            // Just loose the current session by creating new empty managers and clear all input controls by tree traversing
+            session.NewSession();
+            ClearChildrenControls(this);
+        }
+
+
+        /// <summary>
+        /// Tries to shutdown the application.
+        /// 
+        /// If there are unsaved changes, a dialog will prompt before continuing, since unsaved changes will be lost.
+        /// </summary>
+        private void ShutDown()
+        {
+            if (session.UnsavedChanges)
+            {
+                // Create dialog
+                UnsavedChangesDialog dialog = new UnsavedChangesDialog("There are unsaved changes.\nThe unsaved changes will be lost if you exit before savingS.");
+                // Set to owner to center over mainwindow on show
+                dialog.Owner = this;
+
+                // Show the dialog
+                if (dialog.ShowDialog() == true)
+                {
+                    // If user wants to abort just return
+                    return;
+                }
+            }
+
+            // Continue with shutdown
+            Application.Current.Shutdown();
+        }
+
+        /// <summary>
+        /// Saves the current session to the active working file.
+        /// </summary>
+        private void SaveToFile()
+        {
+            try
+            {
+                BinSerializerUtility.BinaryFileSerialize(session, session.WorkingFilePath);
+                session.UnsavedChanges = false;
+            }
+            catch (Exception ex)
+            {
+                OkDialog dialog = new OkDialog(ex.Message);
+                dialog.Owner = this;
+                dialog.ShowDialog();
+            }
+        }
+
+        /// <summary>
+        /// Opens a session from the specified filepath.
+        /// All current unsaved changes will be lost.
+        /// </summary>
+        /// <param name="filePath">The file to read from.</param>
+        private void OpenFromFile(string filePath)
+        {
+            try
+            {
+                session = BinSerializerUtility.BinaryFileDeSerialize<Session>(filePath);
+                session.UnsavedChanges = false;
+                ClearChildrenControls(this);
+                UpdateListView(lviewAnimals, session.AnimalsManager);
+                UpdateListView(lviewRecipeAnimals, session.AnimalsManager);
+                UpdateListView(lviewRecipes, session.RecipesManager);
+                UpdateListView(lviewAvailableRecipes, session.RecipesManager);
+                UpdateListView(lviewStaff, session.StaffsManager);
+            }
+            catch (Exception ex)
+            {
+                OkDialog dialog = new OkDialog(ex.Message);
+                dialog.Owner = this;
+                dialog.ShowDialog();
+            }
+        }
+
+        /// <summary>
+        /// Imports recipes from the specifies xml file.
+        /// This adds the recipes from the file to the current session and does not overwrite the recipes in the session.
+        /// </summary>
+        /// <param name="filePath">The path to recipe xml file.</param>
+        private void ImportXMLRecipes(string filePath)
+        {
+            try
+            {
+                RecipeManager fileRecipes = XMLSerializerUtility.XMLFileDeSerialize<RecipeManager>(filePath); 
+                for (int i = 0; i < fileRecipes.Count; ++i) {
+                    session.RecipesManager.Add(fileRecipes.GetAt(i));
+                }
+                session.UnsavedChanges = true;
+                ClearChildrenControls(tabAnimalRecipes);
+                ClearChildrenControls(tabRecipes);
+                UpdateListView(lviewRecipeAnimals, session.AnimalsManager);
+                UpdateListView(lviewRecipes, session.RecipesManager);
+                UpdateListView(lviewAvailableRecipes, session.RecipesManager);
+            }
+            catch (Exception ex)
+            {
+                OkDialog dialog = new OkDialog(ex.Message);
+                dialog.Owner = this;
+                dialog.ShowDialog();
+            }
+        }
+
+        /// <summary>
+        /// Exports recipes to the specified xml file.
+        /// </summary>
+        /// <param name="filePath">The path to write to.</param>
+        private void ExportXMLRecipes(string filePath)
+        {
+            try
+            {
+                XMLSerializerUtility.XMLFileSerialize(session.RecipesManager, filePath);
+            }
+            catch (Exception ex)
+            {
+                OkDialog dialog = new OkDialog(ex.Message);
+                dialog.Owner = this;
+                dialog.ShowDialog();
+            }
+        }
+
+        /// <summary>
+        /// Imports staff from the specifies xml file.
+        /// This adds the staff from the file to the current session and does not overwrite the staff in the session.
+        /// </summary>
+        /// <param name="filePath">The path to staff xml file.</param>
+        private void ImportXMLStaff(string filePath)
+        {
+            try
+            {
+                StaffManager fileStaff = XMLSerializerUtility.XMLFileDeSerialize<StaffManager>(filePath);
+                for (int i = 0; i < fileStaff.Count; ++i)
+                {
+                    session.StaffsManager.Add(fileStaff.GetAt(i));
+                }
+                session.UnsavedChanges = true;
+                ClearChildrenControls(tabStaff);
+                UpdateListView(lviewStaff, session.StaffsManager);
+            }
+            catch (Exception ex)
+            {
+                OkDialog dialog = new OkDialog(ex.Message);
+                dialog.Owner = this;
+                dialog.ShowDialog();
+            }
+        }
+
+        /// <summary>
+        /// Exports staff to the specified xml file.
+        /// </summary>
+        /// <param name="filePath">The path to write to.</param>
+        private void ExportStaffRecipes(string filePath)
+        {
+            try
+            {
+                XMLSerializerUtility.XMLFileSerialize(session.StaffsManager, filePath);
+            }
+            catch (Exception ex)
+            {
+                OkDialog dialog = new OkDialog(ex.Message);
+                dialog.Owner = this;
+                dialog.ShowDialog();
+            }
+        }
+
+        // ** Animal input
+
         /// <summary>
         /// Creates and adds the animal which is specified in the UI. 
         /// Then hands it over to the AnimalManager.
@@ -103,10 +287,10 @@ namespace Assignment3
         {
             try
             {
-                animalManager.Add(ReadAndValidateAnimalInput());
-                UpdateListView(lviewAnimals, animalManager);
+                session.AnimalsManager.Add(ReadAndValidateAnimalInput());
+                UpdateListView(lviewAnimals, session.AnimalsManager);
                 lviewAnimals.SelectedIndex = lviewAnimals.Items.Count - 1;
-                unsavedChanges = true;
+                session.UnsavedChanges = true;
             }
             catch (InvalidInputException ex)
             {
@@ -354,13 +538,13 @@ namespace Assignment3
         {
             if (lviewAnimals.SelectedItem is IAnimal)
             {
-                animalManager.DeleteAt(lviewAnimals.SelectedIndex);
-                UpdateListView(lviewAnimals, animalManager);
+                session.AnimalsManager.DeleteAt(lviewAnimals.SelectedIndex);
+                UpdateListView(lviewAnimals, session.AnimalsManager);
                 if (lviewAnimals.Items.Count > 0)
                 {
                     lviewAnimals.SelectedIndex = 0;
                 }
-                unsavedChanges = true;
+                session.UnsavedChanges = true;
             }
             else
             {
@@ -380,15 +564,15 @@ namespace Assignment3
                 int selectedIndex = lviewAnimals.SelectedIndex;
                 try
                 {
-                    animalManager.ChangeAt(ReadAndValidateAnimalInput(), selectedIndex);
+                    session.AnimalsManager.ChangeAt(ReadAndValidateAnimalInput(), selectedIndex);
                 }
                 catch (InvalidInputException ex)
                 {
                     HandleInvalidInputFrom(ex.getElement(), ex.Message);
                 }
-                UpdateListView(lviewAnimals, animalManager);
+                UpdateListView(lviewAnimals, session.AnimalsManager);
                 lviewAnimals.SelectedIndex = selectedIndex;
-                unsavedChanges = true;
+                session.UnsavedChanges = true;
             }
             else
             {
@@ -419,15 +603,15 @@ namespace Assignment3
         {
             try
             {
-                recipeManager.Add(ReadAndValidateRecipeInput());
-                UpdateListView(lviewRecipes, recipeManager);
+                session.RecipesManager.Add(ReadAndValidateRecipeInput());
+                UpdateListView(lviewRecipes, session.RecipesManager);
                 int selectedIngredientIndex = lviewIngredients.SelectedIndex;
                 lviewRecipes.SelectedIndex = lviewRecipes.Items.Count - 1;
                 if (selectedIngredientIndex > -1)
                 {
                     lviewIngredients.SelectedIndex = selectedIngredientIndex;
                 }
-                unsavedChanges = true;
+                session.UnsavedChanges = true;
             }
             catch (InvalidInputException ex)
             {
@@ -444,8 +628,8 @@ namespace Assignment3
         {
             if (lviewRecipes.SelectedItem is Recipe)
             {
-                recipeManager.DeleteAt(lviewRecipes.SelectedIndex);
-                UpdateListView(lviewRecipes, recipeManager);
+                session.RecipesManager.DeleteAt(lviewRecipes.SelectedIndex);
+                UpdateListView(lviewRecipes, session.RecipesManager);
                 if (lviewRecipes.Items.Count > 0)
                 {
                     lviewRecipes.SelectedIndex = 0;
@@ -454,7 +638,7 @@ namespace Assignment3
                 {
                     txtRecipeName.Clear();
                 }
-                unsavedChanges = true;
+                session.UnsavedChanges = true;
             }
             else
             {
@@ -474,10 +658,10 @@ namespace Assignment3
                 try
                 {
                     int selectedIndex = lviewRecipes.SelectedIndex;
-                    recipeManager.ChangeAt(ReadAndValidateRecipeInput(), selectedIndex);
-                    UpdateListView(lviewRecipes, recipeManager);
+                    session.RecipesManager.ChangeAt(ReadAndValidateRecipeInput(), selectedIndex);
+                    UpdateListView(lviewRecipes, session.RecipesManager);
                     lviewRecipes.SelectedIndex = selectedIndex;
-                    unsavedChanges = true;
+                    session.UnsavedChanges = true;
                 }
                 catch (InvalidInputException ex)
                 {
@@ -611,18 +795,18 @@ namespace Assignment3
                 {
                     string animalID = ((IAnimal)lviewRecipeAnimals.SelectedItem).ID;
                     Recipe recipe = (Recipe)lviewAvailableRecipes.SelectedItem;
-                    if (animalRecipes.IsKeyPresent(animalID))
+                    if (session.AnimalRecipeManager.IsKeyPresent(animalID))
                     {
-                        List<Recipe> recipes = animalRecipes.GetRecipes(animalID);
+                        List<Recipe> recipes = session.AnimalRecipeManager.GetRecipes(animalID);
                             recipes.Add(recipe);
                             lviewAnimalRecipes.Items.Add(recipe);
                     }
                     else
                     {
-                        animalRecipes.Add(animalID, new List<Recipe> { recipe });
+                        session.AnimalRecipeManager.Add(animalID, new List<Recipe> { recipe });
                         lviewAnimalRecipes.Items.Add(recipe);
                     }
-                    unsavedChanges = true;
+                    session.UnsavedChanges = true;
                 }
                 else
                 {
@@ -646,15 +830,15 @@ namespace Assignment3
             {
                 string animalID = ((IAnimal)lviewRecipeAnimals.SelectedItem).ID;
                 int recipeIndex = lviewAnimalRecipes.SelectedIndex;
-                if (animalRecipes.IsKeyPresent(animalID))
+                if (session.AnimalRecipeManager.IsKeyPresent(animalID))
                 {
-                    animalRecipes.GetRecipes(animalID).RemoveAt(recipeIndex);
+                    session.AnimalRecipeManager.GetRecipes(animalID).RemoveAt(recipeIndex);
                 }
                 lviewAnimalRecipes.Items.RemoveAt(recipeIndex);
                 if (lviewAnimalRecipes.Items.Count > 0) {
                     lviewAnimalRecipes.SelectedIndex = 0;
                 }
-                unsavedChanges = true;
+                session.UnsavedChanges = true;
             }
             else
             {
@@ -686,15 +870,15 @@ namespace Assignment3
         {
             try
             {
-                staffManager.Add(ReadAndValidateStaffInput());
-                UpdateListView(lviewStaff, staffManager);
+                session.StaffsManager.Add(ReadAndValidateStaffInput());
+                UpdateListView(lviewStaff, session.StaffsManager);
                 int selectedQualificationIndex = lviewQualifications.SelectedIndex;
                 lviewStaff.SelectedIndex = lviewStaff.Items.Count - 1;
                 if (selectedQualificationIndex > -1)
                 {
                     lviewQualifications.SelectedIndex = selectedQualificationIndex;
                 }
-                unsavedChanges = true;
+                session.UnsavedChanges = true;
             }
             catch (InvalidInputException ex)
             {
@@ -711,8 +895,8 @@ namespace Assignment3
         {
             if (lviewStaff.SelectedItem is Staff)
             {
-                staffManager.DeleteAt(lviewStaff.SelectedIndex);
-                UpdateListView(lviewStaff, staffManager);
+                session.StaffsManager.DeleteAt(lviewStaff.SelectedIndex);
+                UpdateListView(lviewStaff, session.StaffsManager);
                 if (lviewStaff.Items.Count > 0)
                 {
                     lviewStaff.SelectedIndex = 0;
@@ -721,7 +905,7 @@ namespace Assignment3
                 {
                     txtStaffName.Clear();
                 }
-                unsavedChanges = true;
+                session.UnsavedChanges = true;
             }
             else
             {
@@ -775,10 +959,10 @@ namespace Assignment3
                 try
                 {
                     int selectedIndex = lviewStaff.SelectedIndex;
-                    staffManager.ChangeAt(ReadAndValidateStaffInput(), selectedIndex);
-                    UpdateListView(lviewStaff, staffManager);
+                    session.StaffsManager.ChangeAt(ReadAndValidateStaffInput(), selectedIndex);
+                    UpdateListView(lviewStaff, session.StaffsManager);
                     lviewStaff.SelectedIndex = selectedIndex;
-                    unsavedChanges = true;
+                    session.UnsavedChanges = true;
                 }
                 catch (InvalidInputException ex)
                 {
@@ -866,6 +1050,33 @@ namespace Assignment3
 
 
         // ***** UI handling section *****
+
+        // ** General UI
+
+        /// <summary>
+        /// Method that recursively traverses the logical wpf tree and clears all relevant controls.
+        /// 
+        /// The relevant controls are Textboxes, Listviews, Listboxes, Checkboxes and Textblocks.
+        /// </summary>
+        /// <param name="obj">The dependencyobject which children should be cleared.</param>
+        void ClearChildrenControls(DependencyObject obj)
+        {
+            foreach (Object child in LogicalTreeHelper.GetChildren(obj))
+            {
+                if (child is TextBox)
+                    ((TextBox)child).Clear();
+                else if (child is ListView)
+                    ((ListView)child).Items.Clear();
+                else if (child is ListBox)
+                    ((ListBox)child).UnselectAll();
+                else if (child is CheckBox)
+                    ((CheckBox)child).IsChecked = false;
+                else if (child is TextBlock)
+                    ((TextBlock)child).Text = "";
+                else if (child is DependencyObject)
+                    ClearChildrenControls((DependencyObject)child);
+            }
+        }
 
         // ** Animal tab UI
 
@@ -1081,21 +1292,21 @@ namespace Assignment3
             switch (property)
             {
                 case "ID":
-                    animalManager.SortOnID();
+                    session.AnimalsManager.SortOnID();
                     break;
                 case "Species":
-                    animalManager.SortOnSpecies();
+                    session.AnimalsManager.SortOnSpecies();
                     break;
                 case "Name":
-                    animalManager.SortOnName();
+                    session.AnimalsManager.SortOnName();
                     break;
                 case "Age":
-                    animalManager.SortOnAge();
+                    session.AnimalsManager.SortOnAge();
                     break;
                 default:
                     return;
             }
-            UpdateListView(lviewAnimals, animalManager);
+            UpdateListView(lviewAnimals, session.AnimalsManager);
         }
 
         // ** Recipe tab UI
@@ -1349,9 +1560,9 @@ namespace Assignment3
                 lviewAnimalRecipes.Items.Clear();
 
                 IAnimal animal = (IAnimal)lviewRecipeAnimals.SelectedItem;
-                if (animalRecipes.IsKeyPresent(animal.ID))
+                if (session.AnimalRecipeManager.IsKeyPresent(animal.ID))
                 {
-                    foreach (Recipe recipe in animalRecipes.GetRecipes(animal.ID))
+                    foreach (Recipe recipe in session.AnimalRecipeManager.GetRecipes(animal.ID))
                     {
                         lviewAnimalRecipes.Items.Add(recipe);
                     }
@@ -1398,8 +1609,8 @@ namespace Assignment3
             {
                 if (tabAnimalRecipes.IsSelected)
                 {
-                    UpdateListView(lviewRecipeAnimals, animalManager);
-                    UpdateListView(lviewAvailableRecipes, recipeManager);
+                    UpdateListView(lviewRecipeAnimals, session.AnimalsManager);
+                    UpdateListView(lviewAvailableRecipes, session.RecipesManager);
                     lviewAnimalRecipes.Items.Clear();
                 }
             }
@@ -1491,6 +1702,107 @@ namespace Assignment3
             NewSession();
         }
 
+        private void mnuFileSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (session.WorkingFilePath == String.Empty)
+            {
+                mnuFileSaveAs_Click(sender, e);
+            }
+            else
+            {
+                SaveToFile();
+            }
+        }
+       
+        private void mnuFileSaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+            saveFileDialog.Filter = "Binary file (*.bin)|*.bin";
+
+            saveFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                session.WorkingFilePath = saveFileDialog.FileName;
+                SaveToFile();
+            }
+        }
+
+        private void mnuFileOpen_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.Filter = "Binary file (*.bin)|*.bin";
+
+            openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                OpenFromFile(openFileDialog.FileName);
+            }
+        }
+
+        private void mnuFileExit_Click(object sender, RoutedEventArgs e)
+        {
+            ShutDown();
+        }
+        
+        private void mnuFileXMLImportRecipes_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.Filter = "XML file (*.xml)|*.xml";
+
+            openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ImportXMLRecipes(openFileDialog.FileName);
+            }
+        }
+
+        private void mnuFileXMLExportRecipes_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+            saveFileDialog.Filter = "XML file (*.xml)|*.xml";
+
+            saveFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                ExportXMLRecipes(saveFileDialog.FileName);
+            }
+        }
+        
+        private void mnuFileXMLImportStaff_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.Filter = "XML file (*.xml)|*.xml";
+
+            openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ImportXMLStaff(openFileDialog.FileName);
+            }
+        }
+
+        private void mnuFileXMLExportStaff_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+            saveFileDialog.Filter = "XML file (*.xml)|*.xml";
+
+            saveFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                ExportStaffRecipes(saveFileDialog.FileName);
+            }
+        }
 
         // ** Keyboard shortcut events
 
@@ -1500,97 +1812,37 @@ namespace Assignment3
             {
                 NewSession();
             }
+            else if (e.Key == Key.O && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                mnuFileOpen_Click(null, null);
+            }
+            else if (e.Key == Key.S && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                mnuFileSave_Click(null, null);
+            }
+            else if (e.Key == Key.X && Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+            {
+                ShutDown();
+            }
         }
 
-        /// <summary>
-        /// Starts a new session.
-        /// 
-        /// If the user has made unsaved changes a dialog will be shown asking for confirmation to start a new session, 
-        /// loosing the unsaved changes in the process, or to abort.
-        /// </summary>
-        private void NewSession()
+        // ** General events
+
+        private void AnimalWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (unsavedChanges)
+            if (session.UnsavedChanges)
             {
                 // Create dialog
-                UnsavedChangesDialog dialog = new UnsavedChangesDialog("There are unsaved changes.\nThe unsaved changes will be lost if a new session is started.");
+                UnsavedChangesDialog dialog = new UnsavedChangesDialog("There are unsaved changes.\nThe unsaved changes will be lost if you exit before saving.");
                 // Set to owner to center over mainwindow on show
                 dialog.Owner = this;
 
                 // Show the dialog
                 if (dialog.ShowDialog() == true)
                 {
-                    // If user wants to abort just return
-                    return;
+                    // If user wants to abort cancel closing of window
+                    e.Cancel = true;
                 }
-            }
-            
-            // Ok to start a new session...
-
-            // Just loose the current session by creating new empty managers and clear all input controls by tree traversing
-                    animalManager = new AnimalManager();
-                    recipeManager = new RecipeManager();
-                    staffManager = new StaffManager();
-                    animalRecipes = new AnimalRecipesDictionary();
-                    ClearChildrenControls(this);
-                    unsavedChanges = false;
-                    workingFilePath = String.Empty;
-        }
-
-        /// <summary>
-        /// Method that recursively traverses the logical wpf tree and clears all relevant controls.
-        /// 
-        /// The relevant controls are Textboxes, Listviews, Listboxes, Checkboxes and Textblocks.
-        /// </summary>
-        /// <param name="obj">The dependencyobject which children should be cleared.</param>
-        void ClearChildrenControls(DependencyObject obj)
-        {
-            foreach (Object child in LogicalTreeHelper.GetChildren(obj))
-            {
-                if (child is TextBox)
-                    ((TextBox)child).Clear();
-                else if (child is ListView)
-                    ((ListView)child).Items.Clear();
-                else if (child is ListBox)
-                    ((ListBox)child).UnselectAll();
-                else if (child is CheckBox)
-                    ((CheckBox)child).IsChecked = false;
-                else if (child is TextBlock)
-                    ((TextBlock)child).Text = "";
-                else if (child is DependencyObject)
-                    ClearChildrenControls((DependencyObject)child);
-            }
-        }
-
-        private void mnuFileSave_Click(object sender, RoutedEventArgs e)
-        {
-            if (workingFilePath == String.Empty)
-            {
-                mnuFileSaveAs_Click(sender, e);
-            }
-            else
-            {
-                SaveToFile();
-            }
-        }
-
-        private void SaveToFile()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void mnuFileSaveAs_Click(object sender, RoutedEventArgs e)
-        {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-
-            saveFileDialog.Filter = "Data file (*.dat)|*.dat";
-
-            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                workingFilePath = saveFileDialog.FileName;
-                SaveToFile();
             }
         }
     }

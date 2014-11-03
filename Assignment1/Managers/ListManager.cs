@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assignment3
+namespace Assignment4
 {
     /// <summary>
     /// A manager implementation which can be used as a generic list based registry. 
@@ -31,6 +31,22 @@ namespace Assignment3
             get
             {
                 return list.Count;
+            }
+        }
+
+        /// <summary>
+        /// This property is only used to demonstrate XML serialization.
+        /// The disadvantage of this is exposure of the internal registry data structure.
+        /// </summary>
+        public List<T> List
+        {
+            get
+            {
+                return list;
+            }
+            set
+            {
+                list = value;
             }
         }
 
@@ -138,47 +154,6 @@ namespace Assignment3
         public void Sort(IComparer<T> comparer)
         {
             list.Sort(comparer);
-        }
-
-
-        /// <summary>
-        /// Serializes the list manager to the specified binary file.
-        /// </summary>
-        /// <param name="fileName">The filepath of the file.</param>
-        /// <returns>True if successfull, false otherwise.</returns>
-        public bool BinarySerialize(string fileName)
-        {
-
-        }
-
-        /// <summary>
-        /// DeSerializes the list manager from the specified binary file.
-        /// </summary>
-        /// <param name="fileName">The filepath of the file.</param>
-        /// <returns>True if successfull, false otherwise.</returns>
-        public bool BinaryDeSerialize(string fileName)
-        {
-
-        }
-
-        /// <summary>
-        /// Serializes the list manager to the specified XML file.
-        /// </summary>
-        /// <param name="fileName">The filepath of the file.</param>
-        /// <returns>True if successfull, false otherwise.</returns>
-        public bool XMLSerialize(string fileName)
-        {
-
-        }
-
-        /// <summary>
-        /// DeSerializes the list manager from the specified XML file.
-        /// </summary>
-        /// <param name="fileName">The filepath of the file.</param>
-        /// <returns>True if successfull, false otherwise.</returns>
-        public bool XMLDeSerialize(string fileName)
-        {
-
         }
     }
 }

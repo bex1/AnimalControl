@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assignment3
+namespace Assignment4
 {
     /// <summary>
     /// A recipe with a name and a couple of ingredients.
@@ -12,7 +12,7 @@ namespace Assignment3
     [Serializable]
     public class Recipe
     {
-        private IListManager<string> ingredients;
+        private ListManager<string> ingredients;
         private string name;
 
         /// <summary>
@@ -27,11 +27,15 @@ namespace Assignment3
         /// <summary>
         /// Property used to get access to the ingredients.
         /// </summary>
-        internal IListManager<string> Ingredients
+        public ListManager<string> Ingredients
         {
             get
             {
                 return ingredients;
+            }
+            set
+            {
+                ingredients = value;
             }
         }
 

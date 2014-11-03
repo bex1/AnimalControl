@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<StaffManager xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <List>
+    <Staff>
+      <Qualifications>
+        <List>
+          <string>Glad</string>
+        </List>
+      </Qualifications>
+      <Name>Pelle Svanslös</Name>
+    </Staff>
+    <Staff>
+      <Qualifications>
+        <List>
+          <string>Söt</string>
+        </List>
+      </Qualifications>
+      <Name>Steve Jobs</Name>
+    </Staff>
+    <Staff>
+      <Qualifications>
+        <List>
+          <string>Gullig</string>
+        </List>
+      </Qualifications>
+      <Name>Bill Gates</Name>
+    </Staff>
+    <Staff>
+      <Qualifications>
+        <List>
+          <string>Ekonomisk trygghet</string>
+        </List>
+      </Qualifications>
+      <Name>Anders Borg</Name>
+    </Staff>
+  </List>
+</StaffManager>

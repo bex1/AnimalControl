@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment3
+namespace Assignment4
 {
     /// <summary>
     /// A reptile class.

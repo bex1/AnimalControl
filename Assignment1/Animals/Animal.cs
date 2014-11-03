@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Daniel Bäckström, 2014-09-25, Assignment 2
-namespace Assignment3
+namespace Assignment4
 {
 
     // Note that the use of public on some of the different animal classes properties

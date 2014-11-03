@@ -7,8 +7,8 @@
     <ProjectGuid>{04EBF73A-2F9E-47F2-A783-DA38568F2988}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Assignment3</RootNamespace>
-    <AssemblyName>Assignment3</AssemblyName>
+    <RootNamespace>Assignment4</RootNamespace>
+    <AssemblyName>Assignment4</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -70,6 +70,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="OkDialog.xaml.cs">
+      <DependentUpon>OkDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UnsavedChangesDialog.xaml.cs">
       <DependentUpon>UnsavedChangesDialog.xaml</DependentUpon>
     </Compile>
@@ -104,7 +107,12 @@
     <Compile Include="Recipes\Recipe.cs" />
     <Compile Include="Managers\RecipeManager.cs" />
     <Compile Include="Staff\Staff.cs" />
+    <Compile Include="Utilities\Session.cs" />
     <Compile Include="Utilities\XMLSerializerUtility.cs" />
+    <Page Include="OkDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UnsavedChangesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -172,6 +180,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
