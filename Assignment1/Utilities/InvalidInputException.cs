@@ -51,6 +51,10 @@ namespace Assignment4
             this.element = element;
         }
 
+        /// <summary>
+        /// Returns the UI element where the error accured.
+        /// </summary>
+        /// <returns>The UI element where the error accured.</returns>
         internal FrameworkElement getElement()
         {
             return element;

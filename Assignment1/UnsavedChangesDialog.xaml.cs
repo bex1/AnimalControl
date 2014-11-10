@@ -20,6 +20,10 @@ namespace Assignment4
     /// </summary>
     public partial class UnsavedChangesDialog : Window
     {
+        /// <summary>
+        /// Initializes an dialog with info and ok button.
+        /// </summary>
+        /// <param name="msg">The info to show in the dialog.</param>
         public UnsavedChangesDialog(string msg)
         {
             InitializeComponent();
@@ -29,6 +33,11 @@ namespace Assignment4
             btnOk.Focus();
         }
 
+        /// <summary>
+        /// When ok is clicked we indicate that the dialog result is true.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OkClick(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;

@@ -20,6 +20,10 @@ namespace Assignment4
     /// </summary>
     public partial class InputErrorDialog : Window
     {
+        /// <summary>
+        /// Initializes a InputErrorDialog.
+        /// </summary>
+        /// <param name="errorMsg">The error message to show in the dialog.</param>
         public InputErrorDialog(string errorMsg)
         {
             InitializeComponent();
@@ -29,6 +33,11 @@ namespace Assignment4
             btnOk.Focus();
         }
 
+        /// <summary>
+        /// When ok is clicked we indicate that the dialog result is true.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OkClick(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;

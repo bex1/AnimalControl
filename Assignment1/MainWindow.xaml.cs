@@ -150,11 +150,13 @@ namespace Assignment4
         {
             try
             {
+                // Binary serialize the file to current working file path
                 BinSerializerUtility.BinaryFileSerialize(session, session.WorkingFilePath);
                 session.UnsavedChanges = false;
             }
             catch (Exception ex)
             {
+                // Saving failed so we open a dialog to indicate this
                 OkDialog dialog = new OkDialog(ex.Message);
                 dialog.Owner = this;
                 dialog.ShowDialog();
@@ -170,9 +172,12 @@ namespace Assignment4
         {
             try
             {
+                // Binary deserialize the file
                 session = BinSerializerUtility.BinaryFileDeSerialize<Session>(filePath);
                 session.UnsavedChanges = false;
+                // Clear all UI input controls and info
                 ClearChildrenControls(this);
+                // Update listviews with the new opened register data.
                 UpdateListView(lviewAnimals, session.AnimalsManager);
                 UpdateListView(lviewRecipeAnimals, session.AnimalsManager);
                 UpdateListView(lviewRecipes, session.RecipesManager);
@@ -181,6 +186,7 @@ namespace Assignment4
             }
             catch (Exception ex)
             {
+                // deserializing the file failed so we open a dialog to indicate this
                 OkDialog dialog = new OkDialog(ex.Message);
                 dialog.Owner = this;
                 dialog.ShowDialog();
@@ -196,11 +202,15 @@ namespace Assignment4
         {
             try
             {
+                // XML deserialize the file with recipes
                 RecipeManager fileRecipes = XMLSerializerUtility.XMLFileDeSerialize<RecipeManager>(filePath); 
+                // Append the recipes to the recipe register
                 for (int i = 0; i < fileRecipes.Count; ++i) {
                     session.RecipesManager.Add(fileRecipes.GetAt(i));
                 }
+                // We made changes to the session so remember this.
                 session.UnsavedChanges = true;
+                // Update related listviews to show all recipes.
                 ClearChildrenControls(tabAnimalRecipes);
                 ClearChildrenControls(tabRecipes);
                 UpdateListView(lviewRecipeAnimals, session.AnimalsManager);
@@ -209,6 +219,7 @@ namespace Assignment4
             }
             catch (Exception ex)
             {
+                // deserializing the file failed so we open a dialog to indicate this
                 OkDialog dialog = new OkDialog(ex.Message);
                 dialog.Owner = this;
                 dialog.ShowDialog();
@@ -223,10 +234,12 @@ namespace Assignment4
         {
             try
             {
+                // XML serialize the recipe register
                 XMLSerializerUtility.XMLFileSerialize(session.RecipesManager, filePath);
             }
             catch (Exception ex)
             {
+                // Saving failed so we open a dialog to indicate this
                 OkDialog dialog = new OkDialog(ex.Message);
                 dialog.Owner = this;
                 dialog.ShowDialog();
@@ -242,17 +255,22 @@ namespace Assignment4
         {
             try
             {
+                // XML deserialize the file with staff
                 StaffManager fileStaff = XMLSerializerUtility.XMLFileDeSerialize<StaffManager>(filePath);
+                // Append the staff to the staff register
                 for (int i = 0; i < fileStaff.Count; ++i)
                 {
                     session.StaffsManager.Add(fileStaff.GetAt(i));
                 }
+                // We made changes to the session so remember this.
                 session.UnsavedChanges = true;
+                // Update related listviews to show all staff.
                 ClearChildrenControls(tabStaff);
                 UpdateListView(lviewStaff, session.StaffsManager);
             }
             catch (Exception ex)
             {
+                // deserializing the file failed so we open a dialog to indicate this
                 OkDialog dialog = new OkDialog(ex.Message);
                 dialog.Owner = this;
                 dialog.ShowDialog();
@@ -267,10 +285,12 @@ namespace Assignment4
         {
             try
             {
+                // XML serialize the staff register
                 XMLSerializerUtility.XMLFileSerialize(session.StaffsManager, filePath);
             }
             catch (Exception ex)
             {
+                // Saving failed so we open a dialog to indicate this
                 OkDialog dialog = new OkDialog(ex.Message);
                 dialog.Owner = this;
                 dialog.ShowDialog();
@@ -1309,6 +1329,39 @@ namespace Assignment4
             UpdateListView(lviewAnimals, session.AnimalsManager);
         }
 
+        // ** Animal recipes tab UI
+
+        /// <summary>
+        /// Updates the list of recipes with the associated recipes of the selected animal.
+        /// </summary>
+        private void UpdateSelectedAnimalRecipes()
+        {
+            if (lviewRecipeAnimals.SelectedItem is IAnimal)
+            {
+                txtblckAnimalIngredients.Text = "";
+                lviewAnimalRecipes.Items.Clear();
+
+                IAnimal animal = (IAnimal)lviewRecipeAnimals.SelectedItem;
+                if (session.AnimalRecipeManager.IsKeyPresent(animal.ID))
+                {
+                    foreach (Recipe recipe in session.AnimalRecipeManager.GetRecipes(animal.ID))
+                    {
+                        lviewAnimalRecipes.Items.Add(recipe);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Shows a text representation of the ingredients of the specified recipe in the specified textblock. 
+        /// </summary>
+        /// <param name="txtblck">The textblock where the recipe ingredients should be listed.</param>
+        /// <param name="recipe">The recipe whose ingredients should be displayed.</param>
+        private void UpdateIngredientsFromRecipe(TextBlock txtblck, Recipe recipe)
+        {
+            txtblck.Text = recipe.ToString();
+        }
+
         // ** Recipe tab UI
 
         /// <summary>
@@ -1358,16 +1411,37 @@ namespace Assignment4
         
         // ** Animals tab events
 
+        /// <summary>
+        /// Event called when the upload image button is clicked.
+        /// 
+        /// Lets the user upload an image and if successfull view it in the GUI.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnUpload_Click(object sender, RoutedEventArgs e)
         {
             UploadImage();
         }
 
+        /// <summary>
+        /// Event called when the add animal button is clicked.
+        /// 
+        /// Adds the animal indicated in the UI input controls if the input is valid.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             AddAnimal();
         }
 
+        /// <summary>
+        /// Event called before the text in the animal age textfield is changed.
+        /// 
+        /// This is used since only digits are permitted and other input will not be possible.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void txtAge_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             // Only digits allowed for input
@@ -1377,6 +1451,11 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the list all animals checkbox is checked.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void cbxListAll_Checked(object sender, RoutedEventArgs e)
         {
             lboxCategory.IsEnabled = false;
@@ -1391,6 +1470,13 @@ namespace Assignment4
             txtblckSchedule.Text = "";
         }
 
+        /// <summary>
+        /// Event called when the list all animals checkbox is unchecked.
+        /// 
+        /// All animals is then shown in the animal listbox.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void cbxListAll_Unchecked(object sender, RoutedEventArgs e)
         {
             lboxAnimal.Items.Clear();
@@ -1404,6 +1490,13 @@ namespace Assignment4
             txtblckSchedule.Text = "";
         }
 
+        /// <summary>
+        /// Event called when the selection of the animal category listbox is changed.
+        /// 
+        /// Animals of that category is then shown in the animal listbox.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lboxCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ShowAnimalsForSelectedCategory();
@@ -1416,6 +1509,11 @@ namespace Assignment4
             txtblckSchedule.Text = "";
         }
 
+        /// <summary>
+        /// Event called when the selection of the animal listbox is changed.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lboxAnimal_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateAnimalSpecificContent();
@@ -1424,6 +1522,14 @@ namespace Assignment4
             expSpecifications.IsExpanded = true;
         }
 
+
+        /// <summary>
+        /// Event called when the selection of the animal listview is changed.
+        /// 
+        /// The data of the selected animal is entered into the GUI controls for possible changes.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lviewAnimals_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lviewAnimals.SelectedItem is IAnimal)
@@ -1439,6 +1545,13 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the a header of the animal listview is clicked.
+        /// 
+        /// The system then tries to sort the animals according to the header clicked.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lviewAnimalsHeader_Click(object sender, RoutedEventArgs e)
         {
             if (e.OriginalSource is GridViewColumnHeader)
@@ -1449,6 +1562,13 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the keyboard focus of a listbox is changed.
+        /// 
+        /// Automatically selects the first item in the listbox if no item is selected. 
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lbox_IsKeyboardFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (sender is ListBox)
@@ -1461,11 +1581,25 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the animal delete button is clicked.
+        /// 
+        /// Deletes the selected animal in the animal listview.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             DeleteSelectedAnimal();
         }
 
+        /// <summary>
+        /// Event called when the animal change button is clicked.
+        /// 
+        /// Changes the selected animal in the animal listview to the indicated data of the GUI animal input controls.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnChange_Click(object sender, RoutedEventArgs e)
         {
             ChangeSelectedAnimal();
@@ -1473,6 +1607,13 @@ namespace Assignment4
 
         // ** Recipes tab events
 
+        /// <summary>
+        /// Event called when the selection of the recipe list view is changed.
+        /// 
+        /// Displays information of the selected recipe in the GUI and allows for quick changing of this information and the recipe.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lviewRecipes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lviewRecipes.SelectedItem is Recipe)
@@ -1488,41 +1629,85 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the the add ingredient button is clicked.
+        /// 
+        /// Adds the ingredient indicated by the GUI input to the list of ingredients.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnAddIngredient_Click(object sender, RoutedEventArgs e)
         {
             AddIngredient();
         }
 
-        
+        /// <summary>
+        /// Event called when the the change ingredient button is clicked.
+        /// 
+        /// Changes the selected ingredient to the ingredient indicated by the GUI input.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnChangeIngredient_Click(object sender, RoutedEventArgs e)
         {
             ChangeSelectedIngredient();
         }
 
-        
-
+        /// <summary>
+        /// Event called when the the delete ingredient button is clicked.
+        /// 
+        /// Deletes the selected ingredient from the ingredients list.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnDeleteIngredient_Click(object sender, RoutedEventArgs e)
         {
             DeleteSelectedIngredient();
         }
 
-        
-
+        /// <summary>
+        /// Event called when the delete recipe button is clicked.
+        /// 
+        /// Removes the selected recipe from the recipe registry.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnDeleteRecipe_Click(object sender, RoutedEventArgs e)
         {
             DeleteSelectedRecipe();
         }
 
+        /// <summary>
+        /// Event called when the add recipe button is clicked.
+        /// 
+        /// Creates a recipe with the information supplied in the GUI and adds it to the recipe registry.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnAddRecipe_Click(object sender, RoutedEventArgs e)
         {
             AddRecipe();
         }
-        
+
+        /// <summary>
+        /// Event called when the apply recipe changes button is clicked.
+        /// 
+        /// Applies the specified changes in the GUI to the selected recipe.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnChangeRecipe_Click(object sender, RoutedEventArgs e)
         {
             ApplyRecipeChanges();
         }
 
+        /// <summary>
+        /// Event called when the the selection of the ingredient listview is changed.
+        /// 
+        /// Lets the user view and change the data of the selected ingredient.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lviewIngredients_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lviewIngredients.SelectedItem is string)
@@ -1538,43 +1723,39 @@ namespace Assignment4
             }
         }
 
+        //// <summary>
+        /// Event called when the the new recipe button is clicked.
+        /// 
+        /// Clears all staff controls so the user can easily make a new recipe.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnNewRecipe_Click(object sender, RoutedEventArgs e)
         {
             ClearAllRecipeControls();
         }
 
- 
-
         // ** Animal Recipes tab events
 
+        /// <summary>
+        /// Event called when the animal listview, in animal recipes tab, selection is changed.
+        /// 
+        /// Shows the associated recipes of the selected animal.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lviewRecipeAnimals_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateSelectedAnimalRecipes();
         }
 
-        private void UpdateSelectedAnimalRecipes()
-        {
-            if (lviewRecipeAnimals.SelectedItem is IAnimal)
-            {
-                txtblckAnimalIngredients.Text = "";
-                lviewAnimalRecipes.Items.Clear();
-
-                IAnimal animal = (IAnimal)lviewRecipeAnimals.SelectedItem;
-                if (session.AnimalRecipeManager.IsKeyPresent(animal.ID))
-                {
-                    foreach (Recipe recipe in session.AnimalRecipeManager.GetRecipes(animal.ID))
-                    {
-                        lviewAnimalRecipes.Items.Add(recipe);
-                    }
-                }
-            }
-        }
-
-        private void UpdateIngredientsFromRecipe(TextBlock txtblck, Recipe recipe)
-        {
-            txtblck.Text = recipe.ToString();
-        }
-
+        /// <summary>
+        /// Event called when the available recipes listview selection is changed.
+        /// 
+        /// Lists the ingredients of the selected recipe.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lviewAvailableRecipes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lviewAvailableRecipes.SelectedItem is Recipe)
@@ -1589,6 +1770,13 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the animal recipes listview selection is changed.
+        /// 
+        /// Lists the ingredients of the selected recipe.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lviewAnimalRecipes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lviewAnimalRecipes.SelectedItem is Recipe)
@@ -1603,6 +1791,13 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the tab selection is changed.
+        /// 
+        /// If the tab is the animal recipes tab. The information of the tab is automatically filled in.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.Source is TabControl)
@@ -1616,12 +1811,25 @@ namespace Assignment4
             }
         }
 
-
+        /// <summary>
+        /// Event called when the << animal recipes button is clicked.
+        /// 
+        /// Associates the selected recipe with the selected animal.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnAddRecipeToAnimal_Click(object sender, RoutedEventArgs e)
         {
             AssociateRecipeWithSelectedAnimal();
         }
 
+        /// <summary>
+        /// Event called when the >> animal recipes button is clicked.
+        /// 
+        /// Unassociates the selected recipe with the selected animal.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnDeleteAnimalRecipe_Click(object sender, RoutedEventArgs e)
         {
             UnAssociateRecipeWithSelectedAnimal();
@@ -1630,6 +1838,13 @@ namespace Assignment4
 
         // ** Staff tab events
 
+        /// <summary>
+        /// Event called when the selection of the staff list view is changed.
+        /// 
+        /// Displays information of the selected staff member in the GUI and allows for quick changing of this information and the staff member.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lviewStaff_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lviewStaff.SelectedItem is Staff)
@@ -1645,26 +1860,61 @@ namespace Assignment4
             }
         }
 
+        //// <summary>
+        /// Event called when the the new staff button is clicked.
+        /// 
+        /// Clears all staff controls so the user can easily make a new staff member.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnNewStaff_Click(object sender, RoutedEventArgs e)
         {
             ClearStaffControls();
         }
 
+        /// <summary>
+        /// Event called when the the delete qualification button is clicked.
+        /// 
+        /// Deletes the selected qualification from the qualifications list.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnDeleteQualification_Click(object sender, RoutedEventArgs e)
         {
             DeleteSelectedQualification();
         }
 
+        /// <summary>
+        /// Event called when the the change qualification button is clicked.
+        /// 
+        /// Changes the selected qualification to the qualification indicated by the GUI input.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnChangeQualification_Click(object sender, RoutedEventArgs e)
         {
             ChangeSelectedQualification();
         }
 
+        /// <summary>
+        /// Event called when the the add qualification button is clicked.
+        /// 
+        /// Adds the qualification indicated by the GUI input to the list of qualifications.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnAddQualification_Click(object sender, RoutedEventArgs e)
         {
             AddQualification();
         }
 
+        /// <summary>
+        /// Event called when the the selection of the qualification listview is changed.
+        /// 
+        /// Lets the user view and change the data of the selected qualification.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void lviewQualifications_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lviewQualifications.SelectedItem is string)
@@ -1680,28 +1930,63 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the delete staff button is clicked.
+        /// 
+        /// Removes the selected staff member from the staff registry.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnDeleteStaff_Click(object sender, RoutedEventArgs e)
         {
             DeleteSelectedStaff();
         }
 
+        /// <summary>
+        /// Event called when the add staff button is clicked.
+        /// 
+        /// Creates a staff member with the information supplied in the GUI and adds it to the staff registry.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnAddStaff_Click(object sender, RoutedEventArgs e)
         {
            AddStaff();
         }
 
+        /// <summary>
+        /// Event called when the apply staff changes button is clicked.
+        /// 
+        /// Applies the specified changes in the GUI to the selected staff.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void btnChangeStaff_Click(object sender, RoutedEventArgs e)
         {
             ApplyStaffChanges();
         }
 
-        // ** File menu events
+        // ** Menu events
 
+        /// <summary>
+        /// Event called when the menu item "new" is clicked.
+        /// 
+        /// Initiates a new session with empty registries and GUI controls.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void mnuFileNew_Click(object sender, RoutedEventArgs e)
         {
             NewSession();
         }
 
+        /// <summary>
+        /// Event called when the menu item "save" is clicked.
+        /// 
+        /// Saves the current session to the current working filepath if there is one, else the user is required to specify one.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void mnuFileSave_Click(object sender, RoutedEventArgs e)
         {
             if (session.WorkingFilePath == String.Empty)
@@ -1713,7 +1998,14 @@ namespace Assignment4
                 SaveToFile();
             }
         }
-       
+
+        /// <summary>
+        /// Event called when the menu item "save as" is clicked.
+        /// 
+        /// Lets the user specify a binary session filepath to save to and then saves the current session.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void mnuFileSaveAs_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -1729,6 +2021,13 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the menu item "open" is clicked.
+        /// 
+        /// Lets the user specify a binary session file to open and then opens that session.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void mnuFileOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -1743,11 +2042,25 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the menu item "exit" is clicked.
+        /// 
+        /// Warns the user if there are unsaved changes and if the user continues anyway the application is shutdown.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void mnuFileExit_Click(object sender, RoutedEventArgs e)
         {
             ShutDown();
         }
-        
+
+        /// <summary>
+        /// Event called when the menu item "import xml recipes" is clicked.
+        /// 
+        /// Lets the user specify a xml file to import from and then appends the recipes in that file to the current session recipe registry.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void mnuFileXMLImportRecipes_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -1762,6 +2075,13 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the menu item "export xml recipes" is clicked.
+        /// 
+        /// Lets the user specify a filepath to save to and then saves the recipes register in xml format.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void mnuFileXMLExportRecipes_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -1775,7 +2095,15 @@ namespace Assignment4
                 ExportXMLRecipes(saveFileDialog.FileName);
             }
         }
-        
+
+
+        /// <summary>
+        /// Event called when the menu item "import xml staff" is clicked.
+        /// 
+        /// Lets the user specify a xml file to import from and then appends the staff in that file to the current session staff registry.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void mnuFileXMLImportStaff_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -1790,6 +2118,13 @@ namespace Assignment4
             }
         }
 
+        /// <summary>
+        /// Event called when the menu item "export xml staff" is clicked.
+        /// 
+        /// Lets the user specify a filepath to save to and then saves the staff register in xml format.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void mnuFileXMLExportStaff_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -1806,6 +2141,17 @@ namespace Assignment4
 
         // ** Keyboard shortcut events
 
+        /// <summary>
+        /// Event called when a keyboard button is pressed.
+        /// 
+        /// Responds to different button and button compination clicks in different ways.
+        /// CTRL + N -> Initiates a new session.
+        /// CTRL + S -> Saves the current session.
+        /// CTRL + O -> Lets the user open a saved session.
+        /// ALT + X -> Shutdowns the application.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void HandleKeyDownEvent(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.N && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
@@ -1828,6 +2174,13 @@ namespace Assignment4
 
         // ** General events
 
+        /// <summary>
+        /// Event called when the application window is about to be closed.
+        /// 
+        /// If there are unsaved changes the user is given the opportunity to save first by going back.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">State information of the event.</param>
         private void AnimalWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (session.UnsavedChanges)

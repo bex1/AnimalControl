@@ -11,7 +11,7 @@ namespace Assignment4
     /// A container class holding a list of food schedule descriptions.
     /// </summary>
     [Serializable]
-    public sealed class FoodSchedule : ICloneable
+    public sealed class FoodSchedule
     {
         private List<string> foodDescriptionList;
 
@@ -37,20 +37,6 @@ namespace Assignment4
             foreach (string food in foodList) {
                 if (string.IsNullOrWhiteSpace(food))
                     throw new ArgumentException("The food schedule item is not allowed to be null or consist solely of whitespace");
-                foodDescriptionList.Add(food); // No need to clone since string is immutable
-            }
-        }
-
-        /// <summary>
-        /// Copy constructor.
-        /// Deep copy is made.
-        /// </summary>
-        /// <param name="foodSchedule">Foodschedule instance to copy.</param>
-        internal FoodSchedule(FoodSchedule foodSchedule)
-        {
-            foodDescriptionList = new List<string>();
-            foreach (string food in foodSchedule.foodDescriptionList)
-            {
                 foodDescriptionList.Add(food); // No need to clone since string is immutable
             }
         }
@@ -140,15 +126,6 @@ namespace Assignment4
                 builder.Append("(" + i + ") " + foodDescriptionList[i] + "\n");
             }
             return builder.ToString();
-        }
-
-        /// <summary>
-        /// Used to clone a food schedule.
-        /// </summary>
-        /// <returns>A deep copy of the food schedule.</returns>
-        public object Clone()
-        {
-            return new FoodSchedule(this);
         }
     }
 }
